@@ -1,7 +1,9 @@
 
 # JSONDB - A Powerful JSON Database
 
-JSONDB is a lightweight and versatile JSON database that provides a simple yet powerful solution for storing and querying JSON data. With JSONDB, you can easily persist and manipulate structured data in a JSON format.
+### This is a hobby project, it is still bugy
+
+JSONDB is a lightweight and versatile JSON database that provides a simple yet powerful solution for storing and querying JSON data. With JSONDB, you can easily persist and manipulate structured data in a JSON format. JSONDB is a great choice for simple application where data can stored along with server logics
 
 ## Features
 
@@ -14,16 +16,52 @@ JSONDB is a lightweight and versatile JSON database that provides a simple yet p
 - **Security**: Protect your data with built-in security features such as authentication and access control.
 - **Integration**: Seamlessly integrate JSONDB with your existing tools, frameworks, and systems.
 
-## Installation
+<!-- ## Installation
 
 To install JSONDB, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/your-username/jsondb.git`
+1. Clone the repository: `git clone https://github.com/abubalo/jsondb.git`
 2. Install dependencies: `npm install`
-3. Start the JSONDB server: `npm start`
+3. Start the JSONDB server: `npm start` -->
 
 ## Usage
+To start using JSONdb, follow these steps:
 
+Install JSONdb by running `npm install jsondb` or `yarn add jsondb`.
+
+Import the JSONdb module into your project.
+Initialize the database with the path to your JSON data file.
+
+Utilize the provided CRUD APIs to interact with the JSON data.
+
+Example Usage
+
+```typescript
+
+import JSONdb from 'jsondb';
+
+// Initialize the database
+const db = new JSONdb();
+
+// Define the  schema
+
+db.create(Person, {name:string, age: number, country: string})
+
+// Insert a new record
+const data = { name: 'John Doe', age: 30, country: 'USA' };
+db.insert(Person, data);
+
+// Retrieve a record
+const record = db.find({ name: 'John Doe' });
+
+// Update a record
+record.update.where({id: myId}).set(age: 31);
+db.update(record);
+
+// Delete a record
+db.delete({ name: 'John Doe' });
+
+```
 ### Command-Line Interface (CLI)
 
 The CLI provides a powerful way to interact with JSONDB through command-line commands. Here are some examples:
@@ -76,4 +114,3 @@ License
 This project is licensed under the MIT License.
 
 
-Feel free to customize the `README.md` file to match the specifics of your JSON database project. Add sections, details, and instructions that are relevant and informative for your users.
