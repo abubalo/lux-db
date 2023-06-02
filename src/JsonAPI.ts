@@ -3,7 +3,7 @@ import fs from "fs";
 import { readFile, writeFile } from "fs/promises";
 import { where } from "./util/where";
 
-export class JSONDB<T extends object> {
+export class JsonAPI<T extends object> {
   private readonly filePath: string;
   private _size = 0;
 
