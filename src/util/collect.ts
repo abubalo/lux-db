@@ -10,6 +10,7 @@ export const collect = <T, R> (done: (res: Array<Matcher<T>>) => R)=>{
     return {
         where: where<T, R>(collector: (key: KeyChain<T>, comparator : Comparator, value: unknown) =>{
             matchers.push({key, comparator, value})
-        }, run), run
+        }, run), 
+        run
     }
 }
