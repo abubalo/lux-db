@@ -7,11 +7,11 @@ export const where = <T, R>(collector: Collector<T>, runner: Promise<R>) => {
         collector(key, Comparator.Equals, val);
         return { where: where<T, R>(collector, runner), run: runner };
       },
-      notEquals(val: unknown) {
+      notEqual(val: unknown) {
         collector(key, Comparator.NotEqual, val);
         return { where: where<T, R>(collector, runner), run: runner };
       },
-      greatherThan(val: unknown) {
+      greaterThan(val: unknown) { 
         collector(key, Comparator.GreaterThan, val);
         return { where: where<T, R>(collector, runner), run: runner };
       },
@@ -19,7 +19,7 @@ export const where = <T, R>(collector: Collector<T>, runner: Promise<R>) => {
         collector(key, Comparator.LessThan, val);
         return { where: where<T, R>(collector, runner), run: runner };
       },
-      gretherOrEqual(val: unknown) {
+      greaterOrEqual(val: unknown) {
         collector(key, Comparator.GreaterOrEqual, val);
         return { where: where<T, R>(collector, runner), run: runner };
       },
