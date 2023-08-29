@@ -1,20 +1,18 @@
 
-# JSONDB - A Powerful JSON Database
+# JSON Database
 
-### This is a hobby project, it is still bugy
-
-JSONDB is a lightweight and versatile JSON database that provides a simple yet powerful solution for storing and querying JSON data. With JSONDB, you can easily persist and manipulate structured data in a JSON format. JSONDB is a great choice for simple application where data can stored along with server logics
+JSONDB is a lightweight and versatile JSON database that provides a simple yet powerful solution for storing and querying JSON data. With JSONDB, you can easily persist and manipulate structured data in a JSON format. JSONDB is a great choice for simple applications where data can be stored along with server logic.
 
 ## Features
 
 - **Easy to Use**: JSONDB offers a user-friendly interface for storing, retrieving, and managing JSON data.
 - **Query Capabilities**: Perform advanced queries on your JSON data using a flexible and intuitive query syntax.
-- **Command-Line Interface (CLI)**: Interact with the database through a command-line interface, allowing for automation and scriptability.
-- **Graphical User Interface (GUI)**: Access the database using a graphical user interface with intuitive data visualization and query building tools.
-- **Data Integrity**: JSONDB ensures data integrity by providing validation and schema evolution mechanisms.
+<!-- - **Command-Line Interface (CLI)**: Interact with the database through a command-line interface, allowing for automation and scriptability. -->
+<!-- - **Graphical User Interface (GUI)**: Access the database using a graphical user interface with intuitive data visualization and query building tools. -->
+<!-- - **Data Integrity**: JSONDB ensures data integrity by providing validation and schema evolution mechanisms. -->
 - **Performance Optimization**: Optimize database performance using indexing and caching techniques.
-- **Security**: Protect your data with built-in security features such as authentication and access control.
-- **Integration**: Seamlessly integrate JSONDB with your existing tools, frameworks, and systems.
+<!-- - **Security**: Protect your data with built-in security features such as authentication and access control. -->
+**Integration**Seamlessly integrates JSONDB with your existing tools, frameworks, and systems.
 
 <!-- ## Installation
 
@@ -62,7 +60,7 @@ db.update(record);
 db.delete({ name: 'John Doe' });
 
 ```
-### Command-Line Interface (CLI)
+<!-- ### Command-Line Interface (CLI)
 
 The CLI provides a powerful way to interact with JSONDB through command-line commands. Here are some examples:
 
@@ -103,14 +101,9 @@ Getting Started
 API Reference
 Querying Data
 Advanced Features 
+` -->
 
-`
 
-## Contributing
-
-Contributions to JSONDB are welcome! If you'd like to contribute, please follow the guidelines in CONTRIBUTING.md.
-License
-
-This project is licensed under the MIT License.
+## Licensed under the MIT License.
 
 
