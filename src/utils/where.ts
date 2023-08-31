@@ -1,6 +1,9 @@
 import { Collector, Comparator, KeyChain } from "../../types";
 
-export const where = <T, R>(collector: Collector<T>, runner: ()=> Promise<R>) => {
+export const where = <T, R>(
+  collector: Collector<T>,
+  runner: () => Promise<R>
+) => {
   return (key: KeyChain<T>) => {
     return {
       equals(val: unknown) {
@@ -11,7 +14,7 @@ export const where = <T, R>(collector: Collector<T>, runner: ()=> Promise<R>) =>
         collector(key, Comparator.NotEqual, val);
         return { where: where<T, R>(collector, runner), run: runner };
       },
-      greaterThan(val: unknown) { 
+      greaterThan(val: unknown) {
         collector(key, Comparator.GreaterThan, val);
         return { where: where<T, R>(collector, runner), run: runner };
       },
