@@ -8,7 +8,8 @@
     "noEmitOnError": true,
     "esModuleInterop": true,
     "lib": ["es2018", "DOM"],
-    // "rootDir": "/src",
+    "rootDir": "./src",
+    "baseUrl": "./"
   },
   "include": [
     "src/**/*"
