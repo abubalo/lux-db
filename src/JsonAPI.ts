@@ -31,13 +31,6 @@ export class JSONDatatbase<T extends object> {
     return item;
   }
 
-  // public async select(){
-  //   return {
-  //     where: where(),
-  //     run,
-  //   }
-  // }
-
   public getOne(...keys: KeyChain<T>[]) {
     return collect<T, Promise<T | Partial<T> | null>>(
       async (matchers: Matcher<T>[]) => {
