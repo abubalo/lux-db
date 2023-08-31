@@ -1,4 +1,3 @@
-
 # JSON Database
 
 JSONDB is a lightweight and versatile JSON database that provides a simple yet powerful solution for storing and querying JSON data. With JSONDB, you can easily persist and manipulate structured data in a JSON format. JSONDB is a great choice for simple applications where data can be stored along with server logic.
@@ -7,12 +6,12 @@ JSONDB is a lightweight and versatile JSON database that provides a simple yet p
 
 - **Easy to Use**: JSONDB offers a user-friendly interface for storing, retrieving, and managing JSON data.
 - **Query Capabilities**: Perform advanced queries on your JSON data using a flexible and intuitive query syntax.
-<!-- - **Command-Line Interface (CLI)**: Interact with the database through a command-line interface, allowing for automation and scriptability. -->
-<!-- - **Graphical User Interface (GUI)**: Access the database using a graphical user interface with intuitive data visualization and query building tools. -->
-<!-- - **Data Integrity**: JSONDB ensures data integrity by providing validation and schema evolution mechanisms. -->
+  <!-- - **Command-Line Interface (CLI)**: Interact with the database through a command-line interface, allowing for automation and scriptability. -->
+  <!-- - **Graphical User Interface (GUI)**: Access the database using a graphical user interface with intuitive data visualization and query building tools. -->
+  <!-- - **Data Integrity**: JSONDB ensures data integrity by providing validation and schema evolution mechanisms. -->
 - **Performance Optimization**: Optimize database performance using indexing and caching techniques.
-<!-- - **Security**: Protect your data with built-in security features such as authentication and access control. -->
-**Integration**Seamlessly integrates JSONDB with your existing tools, frameworks, and systems.
+  <!-- - **Security**: Protect your data with built-in security features such as authentication and access control. -->
+  **Integration**Seamlessly integrates JSONDB with your existing tools, frameworks, and systems.
 
 <!-- ## Installation
 
@@ -23,6 +22,7 @@ To install JSONDB, follow these steps:
 3. Start the JSONDB server: `npm start` -->
 
 ## Usage
+
 To start using JSONdb, follow these steps:
 
 Install JSONdb by running `npm install jsondb` or `yarn add jsondb`.
@@ -34,32 +34,40 @@ Utilize the provided CRUD APIs to interact with the JSON data.
 
 Example Usage
 
-```typescript
+```ts filename="index.ts" switcher
 
 import JSONdb from 'jsondb';
 
-// Initialize the database
-const db = new JSONdb();
 
 // Define the  schema
+interface Todo {
+    id: number;
+  name: string;
+  status: "pending" | "completed" | "archive";
+  author: {
+      name: string;
+  };
+}
 
-db.create(Person, {name:string, age: number, country: string})
+// Initialize the database
+const db = new JSONdb<Todo>();
 
 // Insert a new record
 const data = { name: 'John Doe', age: 30, country: 'USA' };
-db.insert(Person, data);
+db.insert(data);
 
 // Retrieve a record
-const record = db.find({ name: 'John Doe' });
+const record = db.find("todo").where("id").equals("3");
 
 // Update a record
-record.update.where({id: myId}).set(age: 31);
+record.update.where("id").equals("2").set(age: 31);
 db.update(record);
 
 // Delete a record
 db.delete({ name: 'John Doe' });
 
 ```
+
 <!-- ### Command-Line Interface (CLI)
 
 The CLI provides a powerful way to interact with JSONDB through command-line commands. Here are some examples:
@@ -100,10 +108,7 @@ For detailed information on using JSONDB, refer to the Documentation.
 Getting Started
 API Reference
 Querying Data
-Advanced Features 
+Advanced Features
 ` -->
 
-
-## Licensed under the MIT License.
-
-
+### Licensed under the MIT License.
