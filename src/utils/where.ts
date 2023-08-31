@@ -1,6 +1,6 @@
-import { Collector, Comparator, KeyChain } from "../types/types";
+import { Collector, Comparator, KeyChain } from "../../types";
 
-export const where = <T, R>(collector: Collector<T>, runner: Promise<R>) => {
+export const where = <T, R>(collector: Collector<T>, runner: ()=> Promise<R>) => {
   return (key: KeyChain<T>) => {
     return {
       equals(val: unknown) {
