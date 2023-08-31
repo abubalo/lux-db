@@ -1,6 +1,5 @@
-import { Comparator, Matcher } from "../types/types"
+import { Comparator, Matcher, KeyChain } from "../../types"
 import { where } from "./where";
-import { KeyChain } from "../types/types";
 
 export const collect = <T, R> (done: (res: Array<Matcher<T>>) => R)=>{
     const matchers: Array<Matcher <T>> = [];
@@ -8,9 +7,9 @@ export const collect = <T, R> (done: (res: Array<Matcher<T>>) => R)=>{
     const run = async () => done(matchers);
 
     return {
-        where: where<T, R>((key: KeyChain<T>, comparator : Comparator, value: unknown) =>{
+        where: where<T, R>((key: KeyChain<T>, comparator : Comparator, value) =>{
             matchers.push({key, comparator, value})
-        }, run()), 
+        }, run), 
         run
     }
 }
