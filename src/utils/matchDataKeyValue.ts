@@ -1,4 +1,4 @@
-import { Matcher, ObjectLiteral, Comparator } from "../types/types";
+import { Matcher, ObjectLiteral, Comparator } from "../../types";
 import { getKeyChainValue } from "./getKeyChainValues";
 export const matchDataKayValue = <T>(
   data: T,
