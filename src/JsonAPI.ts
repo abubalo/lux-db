@@ -97,7 +97,30 @@ export class JSONDatatbase<T extends object> {
     );
   }
 
-  
+  public updateAll(data: Partial<T>) {
+    return collect<T, Promise<T | Partial<T> | null>>(
+      async (matchers: Matcher<T>[]) => {
+        const list = (await this.read()).map((item) => {
+          if (matchers.every((matcher) => matchDataKayValue(item, matcher))) {
+            return { ...item, ...data };
+          }
+          return item;
+        });
+
+        const itemIndex = list.findIndex((item) => {
+          return matchers.every((matcher) => matchDataKayValue(item, matcher));
+        });
+
+        if (itemIndex >= 0) {
+          list[itemIndex] = { ...list[itemIndex], ...data };
+          await this.save(list);
+          return list[itemIndex];
+        }
+        return null;
+      }
+    );
+  }
+
  
 
   private async read(): Promise<Array<T>> {
