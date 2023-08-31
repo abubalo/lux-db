@@ -1,4 +1,4 @@
-import { ObjectLiteral } from "../types/types";
+import { ObjectLiteral } from "../../types";
 
 export const getKeyChainValue = (
   keyChain: string,
