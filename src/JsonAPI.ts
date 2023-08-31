@@ -73,48 +73,38 @@ export class JSONDatatbase<T extends object> {
   }
 
   public updateOne(data: Partial<T>) {
-    return collect<T, Promise<T | Partial<T> | null>>(
-      async (matchers: Matcher<T>[]) => {
-        const list = await this.read();
-        const itemIndex = list.findIndex((item) => {
-          return matchers.every((matcher) => matchDataKayValue(item, matcher));
-        });
+    return collect<T, Promise<T | null>>(async (matchers: Matcher<T>[]) => {
+      const list = await this.read();
+      const itemIndex = list.findIndex((item) => {
+        return matchers.every((matcher) => matchDataKayValue(item, matcher));
+      });
 
-        if (itemIndex >= 0) {
-          list[itemIndex] = { ...list[itemIndex], ...data };
-          await this.save(list);
-          return list[itemIndex];
-        }
-        return null;
+      if (itemIndex >= 0) {
+        list[itemIndex] = { ...list[itemIndex], ...data };
+        await this.save(list);
+        return list[itemIndex];
       }
-    );
+      return null;
+    });
   }
 
   public updateAll(data: Partial<T>) {
-    return collect<T, Promise<T | Partial<T> | null>>(
-      async (matchers: Matcher<T>[]) => {
-        const list = (await this.read()).map((item) => {
-          if (matchers.every((matcher) => matchDataKayValue(item, matcher))) {
-            return { ...item, ...data };
-          }
-          return item;
-        });
-
-        const itemIndex = list.findIndex((item) => {
-          return matchers.every((matcher) => matchDataKayValue(item, matcher));
-        });
-
-        if (itemIndex >= 0) {
-          list[itemIndex] = { ...list[itemIndex], ...data };
-          await this.save(list);
-          return list[itemIndex];
+    return collect<T, Promise<T[]>>(async (matchers: Matcher<T>[]) => {
+      const updateItems: T[] = [];
+      const list = (await this.read()).map((item) => {
+        if (matchers.every((matcher) => matchDataKayValue(item, matcher))) {
+          const updateItem = { ...item, ...data };
+          updateItems.push(updateItem);
+          return updateItem;
         }
-        return null;
-      }
-    );
-  }
+        return item;
+      });
 
- 
+      await this.save(list);
+
+      return updateItems;
+    });
+  }
 
   private async read(): Promise<Array<T>> {
     return JSON.parse(await readFile(this.filePath, "utf-8"));
