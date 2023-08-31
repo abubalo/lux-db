@@ -2,18 +2,19 @@ import * as path from "path";
 import fs from "fs";
 import { readFile, writeFile } from "fs/promises";
 import { where } from "./utils/where";
-import { KeyChain, Matcher } from "../types";
+import { KeyChain, Matcher, ObjectLiteral } from "../types";
 import { collect } from "./utils/collect";
+import { matchDataKayValue } from "./utils/match-data-key-value";
+import { createItemFromKeys } from "./utils/create-items-from-keys";
 
 export class JSONDatatbase<T extends object> {
   private readonly filePath: string;
   private _size = 0;
 
-  
-  get size(){
+  get size() {
     return this._size;
   }
-  
+
   constructor(private fileName: string) {
     this.filePath = path.join(__dirname + "/db", `${fileName}.json`);
 
@@ -26,26 +27,61 @@ export class JSONDatatbase<T extends object> {
 
   public async insert(item: T): Promise<T> {
     await this.save(item);
-    this._size += 1; 
+    this._size += 1;
     return item;
   }
-  
-  public async select(){
-    return {
-      where: where(),
-      run,
-    }
+
+  // public async select(){
+  //   return {
+  //     where: where(),
+  //     run,
+  //   }
+  // }
+
+  public getOne(...keys: KeyChain<T>[]) {
+    return collect<T, Promise<T | Partial<T> | null>>(
+      async (matchers: Matcher<T>[]) => {
+        const item = (await this.read()).find((item) => {
+          return matchers.every((matcher) => matchDataKayValue(item, matcher));
+        });
+
+        if (item) {
+          if (keys.length) {
+            return createItemFromKeys(
+              keys as string[],
+              item as ObjectLiteral
+            ) as Partial<T>;
+          }
+          return item;
+        }
+        return null;
+      }
+    );
+  }
+  public getAll(...keys: KeyChain<T>[]) {
+    return collect<T, Promise<T[] | Partial<T>[]>>(
+      async (matchers: Matcher<T>[]) => {
+        const items = (await this.read()).filter((item) => {
+          return matchers.every((matcher) => matchDataKayValue(item, matcher));
+        });
+
+        if (keys.length) {
+          return items.map((item) => {
+            return createItemFromKeys(
+              keys as string[],
+              item as ObjectLiteral
+            ) as Partial<T>;
+          });
+        }
+
+        return items;
+      }
+    );
   }
 
-  getOne(...keys: KeyChain<T>[]){
-
-    return collect<T, Promise<T | Partial<T> | null>>( async (matchers: (Matcher<T>)[])=>{
-      console.log(matchers, keys);
-      return null;
-    });
-
-  }
   
+
+ 
 
   private async read(): Promise<Array<T>> {
     return JSON.parse(await readFile(this.filePath, "utf-8"));
