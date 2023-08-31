@@ -1,9 +1,11 @@
 import * as path from "path";
 import fs from "fs";
 import { readFile, writeFile } from "fs/promises";
-import { where } from "./util/where";
+import { where } from "./utils/where";
+import { KeyChain, Matcher } from "../types";
+import { collect } from "./utils/collect";
 
-export class JsonAPI<T extends object> {
+export class JSONDatatbase<T extends object> {
   private readonly filePath: string;
   private _size = 0;
 
@@ -21,17 +23,6 @@ export class JsonAPI<T extends object> {
       });
     }
   }
-  
-  public async create(name: string, data: T | Array<T>): Promise<T | Array<T>>{
-    const filePath = path.join(__dirname + "/types", `${name}.d.ts`);
-  
-    if (!fs.existsSync(this.filePath)) {
-      fs.writeFileSync(filePath, JSON.stringify([]), {
-        encoding: "utf-8",
-      });
-    }
-    return await T
-  } 
 
   public async insert(item: T): Promise<T> {
     await this.save(item);
@@ -45,6 +36,16 @@ export class JsonAPI<T extends object> {
       run,
     }
   }
+
+  getOne(...keys: KeyChain<T>[]){
+
+    return collect<T, Promise<T | Partial<T> | null>>( async (matchers: (Matcher<T>)[])=>{
+      console.log(matchers, keys);
+      return null;
+    });
+
+  }
+  
 
   private async read(): Promise<Array<T>> {
     return JSON.parse(await readFile(this.filePath, "utf-8"));
