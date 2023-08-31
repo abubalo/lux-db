@@ -1,4 +1,4 @@
-import { JSONDB } from "./JsonAPI";
+import { JSONDatatbase } from "./JsonAPI";
 
 interface Todo {
   id: number;
@@ -9,7 +9,7 @@ interface Todo {
   };
 }
 
-const db = new JSONDB<Todo>("todo");
+const db = new JSONDatatbase<Todo>("todo");
 
 (async () => {
     // const todo = db.insert({
@@ -21,13 +21,14 @@ const db = new JSONDB<Todo>("todo");
     //   },
     // });
 
-  const todo = db
-    .select("name", "author.name", "status")
-    .where("status")
-    .equals("pending")
-    .where("author.name")
-    .equals("John Doe")
-    .run();
+  // const todo = db
+  //   .select("name", "author.name", "status")
+  //   .where("status")
+  //   .equals("pending")
+  //   .where("author.name")
+  //   .equals("John Doe")
+  //   .run();
 
+  const todo = db.getOne("name", "author", "status").where("status").equals("pending").run();
   console.log(todo);
 })();
