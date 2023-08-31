@@ -106,6 +106,24 @@ export class JSONDatatbase<T extends object> {
     });
   }
 
+  public deleteOne() {
+    return collect<T, Promise<T | null>>(async (matchers: Matcher<T>[]) => {
+      const list = await this.read();
+      const itemIndex = list.findIndex((item) => {
+        return matchers.every((matcher) => matchDataKayValue(item, matcher));
+      });
+
+      if (itemIndex >= 0) {
+        const deletedItem = list.splice(itemIndex, 1)[0]; // Remove the item at itemIndex
+        await this.save(list);
+        return deletedItem;
+      }
+      return null;
+    });
+  }
+
+  
+
   private async read(): Promise<Array<T>> {
     return JSON.parse(await readFile(this.filePath, "utf-8"));
   }
