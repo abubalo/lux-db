@@ -122,7 +122,25 @@ export class JSONDatatbase<T extends object> {
     });
   }
 
-  
+  public deleteAll() {
+    return collect<T, Promise<T[]>>(async (matchers: Matcher<T>[]) => {
+      const deleteItems: T[] = [];
+      const list = (await this.read()).filter((item) => {
+        const toDelete = matchers.every((matcher) =>
+          matchDataKayValue(item, matcher)
+        );
+        if (toDelete) {
+          deleteItems.push(item);
+          return !deleteItems;
+        }
+        return item;
+      });
+
+      await this.save(list);
+
+      return deleteItems;
+    });
+  }
 
   private async read(): Promise<Array<T>> {
     return JSON.parse(await readFile(this.filePath, "utf-8"));
