@@ -46,10 +46,16 @@ export default class JSONDatatbase<T extends object> {
    * @param item - The item to be inserted.
    * @returns Promise resolving to the inserted item.
    */
-  public async insert(item: T): Promise<T> {
-    await this.save(item);
-    this._size += 1;
-    return item;
+  public async insert(items: T | T[]): Promise<T | T[]> {
+    if (Array.isArray(items)) {
+      await this.save(items);
+      this._size += items.length;
+      return items;
+    } else {
+      await this.save(items);
+      this._size += 1;
+      return items;
+    }
   }
 
   /**
