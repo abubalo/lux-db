@@ -11,8 +11,8 @@ A personal project aimed at enhancing TypeScript knowledge by implementing a sim
 - [Introduction](#introduction)
 - [Features](#features)
 - [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
@@ -39,7 +39,7 @@ The JSONDatabase project is a personal endeavor to deepen TypeScript skills by b
 1. Clone the repository:
 
 ```sh
-   git clone https://github.com/your-username/json-database.git
+  git clone https://github.com/your-username/json-database.git
 ```
 
 Navigate to the project directory:
@@ -63,12 +63,12 @@ import createId from "./src/lib/generateId"
 
 //Define schema of your data
 interface Todo {
-  id: string;
+id: string;
+name: string;
+status: "pending" | "completed" | "archive";
+author: {
   name: string;
-  status: "pending" | "completed" | "archive";
-  author: {
-    name: string;
-  };
+};
 }
 
 // Instantiate database
@@ -76,50 +76,50 @@ const db = new jsonDatabase<Todo>("file-name");
 
 // insert data
 const insertItem = async  () => {
-  db.insert({
-    id: createId(),
-    name: "Buy groceries",
-    status: "pending",
-    author: {
-      name: "Alice",
-    },
-  });
+db.insert({
+  id: createId(),
+  name: "Buy groceries",
+  status: "pending",
+  author: {
+    name: "Alice",
+  },
+});
 }
-  //Insert many items
+//Insert many items
 const insertItems = async ()=>{
 const todos: Todo[] = [
-  {
-    id: createId(),
-    name: "Write a report",
-    status: "pending",
-    author: {
-      name: "Bob",
-    },
+{
+  id: createId(),
+  name: "Write a report",
+  status: "pending",
+  author: {
+    name: "Bob",
   },
-  {
-    id: createId(),
-    name: "Pay bills",
-    status: "completed",
-    author: {
-      name: "Charlie",
-    },
+},
+{
+  id: createId(),
+  name: "Pay bills",
+  status: "completed",
+  author: {
+    name: "Charlie",
   },
-  {
-    id: createId(),
-    name: "Go for a run",
-    status: "completed",
-    author: {
-      name: "David",
-    },
+},
+{
+  id: createId(),
+  name: "Go for a run",
+  status: "completed",
+  author: {
+    name: "David",
   },
-  {
-    id: createId(),
-    name: "Read a book",
-    status: "archive",
-    author: {
-      name: "Eve",
-    },
+},
+{
+  id: createId(),
+  name: "Read a book",
+  status: "archive",
+  author: {
+    name: "Eve",
   },
+},
 ];
 
 // Pass todos items to insert function
@@ -131,43 +131,47 @@ return items;
 
 // Selecting item from database
 const selectItem = async ()=>{
-  // select todos.name,  todos.author, and todos.status from todos database where status equals pending
-  const todo = db.getOne("name", "author", "status").where("status").equals("pending").run();
-  return todo;
+// select todos.name,  todos.author, and todos.status from todos database where status equals pending
+const todo = db.getOne("name", "author", "status").where("status")
+.equals("pending").run();
+return todo;
 }
 
 // Selecting all from todo database
 const selectItems = async ()=>{
-  // select all ids, names, and authors from todos database where author name equals John Doe
-  const item = db.getOne("id","name", "author").where("author.name").equals("John Doe").run();
-  return item;
+// select all ids, names, and authors from todos database where author name equals John Doe
+const item = db.getOne("id","name", "author").where("author.name")
+.equals("John Doe").run();
+return item;
 }
 
 Update single item from database
 const updateItem = async ()=>{
-  // Delete todos item from todos database where author name equals Abu Balo
-  db.updateOne({status: "completed"}).where("author.name").equals("John Doe").run();
+// Delete todos item from todos database where author name equals Abu Balo
+db.updateOne({status: "completed"}).where("author.name")
+.equals("John Doe").run();
 }
 
 // Update many items from database
 const updateAllItems = async ()=>{
-  // update todos.name and todos.status, from todos database where author name equals Abu Balo
-  const item = db.updateAll({name: "Cook the meal", status : "completed"}).where("author.name").equals("Abu Balo").run();
-  return item;
+// update todos.name and todos.status, from todos database where author name equals Abu Balo
+const item = db.updateAll({name: "Cook the meal", status : "completed"})
+.where("author.name").equals("Abu Balo").run();
+return item;
 }
 
 // Delete single item from database
 const DeleteItem = async ()=>{
-  // Delete todo item from todos database where author name equals Abu Balo
-  const item = db.deleteOne().where("author.name").equals("Abu Balo").run();
-  return item;
+// Delete todo item from todos database where author name equals Abu Balo
+const item = db.deleteOne().where("author.name").equals("Abu Balo").run();
+return item;
 }
 
 //  Delete many items from database
 const DeleteAllItems = async ()=>{
-  // Delete  all todos items from todos database where author name equals Abu Balo
-  const item = db.deleteOne().where("author.name").equals("Abu Balo").run();
-  return item;
+// Delete  all todos items from todos database where author name equals Abu Balo
+const item = db.deleteOne().where("author.name").equals("Abu Balo").run();
+return item;
 }
 ```
 
@@ -179,5 +183,5 @@ Run the TypeScript compiler to compile the code:
 yarn run local
 ```
 
-License
+## License
 This project is licensed under the [MIT License](/LICENSE).
