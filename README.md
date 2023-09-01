@@ -71,7 +71,7 @@ interface Todo {
   };
 }
 
-//Insantiatite database
+// Instantiatite database
 const db = new jsonDatabase<Todo>("file-name");
 
 // insert data
@@ -85,7 +85,7 @@ const insertItem = async  () => {
     },
   });
 }
-  //Insert many data
+  //Insert many items
 const insertItems = async ()=>{
 const todos: Todo[] = [
   {
@@ -122,7 +122,7 @@ const todos: Todo[] = [
   },
 ];
 
-// pass todos items to const
+// Pass todos items to insert function
 const items = db.insert(todos);
 
 return items;
@@ -131,41 +131,41 @@ return items;
 
 // Selecting item from database
 const selectItem = async ()=>{
-  // select todos.name,  todos.author, and todos.status from todos database where status eqauls pending
+  // select todos.name,  todos.author, and todos.status from todos database where status equals pending
   const todo = db.getOne("name", "author", "status").where("status").equals("pending").run();
   return todo;
 }
 
 // Selecting all from todo database
 const selectItems = async ()=>{
-  // select all ids, names, and authors from todos database where author name eqauls John Doe
+  // select all ids, names, and authors from todos database where author name equals John Doe
   const item = db.getOne("id","name", "author").where("author.name").equals("John Doe").run();
   return item;
 }
 
 Update single item from database
 const updateItem = async ()=>{
-  // Delete todos item from todos database where author name eqauls Abu Balo
+  // Delete todos item from todos database where author name equals Abu Balo
   db.updateOne({status: "completed"}).where("author.name").equals("John Doe").run();
 }
 
 // Update many items from database
 const updateAllItems = async ()=>{
-  // update todos.name and todos.status, from todos database where author name eqauls Abu Balo
+  // update todos.name and todos.status, from todos database where author name equals Abu Balo
   const item = db.updateAll({name: "Cook the meal", status : "completed"}).where("author.name").equals("Abu Balo").run();
   return item;
 }
 
 // Delete single item from database
 const DeleteItem = async ()=>{
-  // Delete todo item from todos database where author name eqauls Abu Balo
+  // Delete todo item from todos database where author name equals Abu Balo
   const item = db.deleteOne().where("author.name").equals("Abu Balo").run();
   return item;
 }
 
 //  Delete many items from database
 const DeleteAllItems = async ()=>{
-  // Delete  all todos items from todos database where author name eqauls Abu Balo
+  // Delete  all todos items from todos database where author name equals Abu Balo
   const item = db.deleteOne().where("author.name").equals("Abu Balo").run();
   return item;
 }
