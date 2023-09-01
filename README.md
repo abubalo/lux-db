@@ -1,25 +1,10 @@
-# JSONDatabase
+# NodeJsonDb
 
 ![GitHub](https://img.shields.io/github/license/abubalo/json-database)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.2.2-blue)
 ![Node.js](https://img.shields.io/badge/Node.js-14.x-green)
 
-A personal project aimed at enhancing TypeScript knowledge by implementing a simple JSON database with query capabilities.
-
-## Table of Contents
-
-- [Introduction](#introduction)
-- [Features](#features)
-- [Getting Started](#getting-started)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
-
-## Introduction
-
-The JSONDatabase project is a personal endeavor to deepen TypeScript skills by building a basic JSON database system. It's designed to provide a hands-on experience with TypeScript concepts and best practices.
+NodeJsonDb is a lightweight JSON database library designed to simplify JSON data storage, manipulation, and retrieval in your applications. Whether you're creating a basic to-do list app or working on a larger project, JSONDataMagic is here to assist you!
 
 ## Features
 
