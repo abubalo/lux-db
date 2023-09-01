@@ -71,7 +71,7 @@ interface Todo {
   };
 }
 
-// Instantiatite database
+// Instantiate database
 const db = new jsonDatabase<Todo>("file-name");
 
 // insert data
