@@ -57,6 +57,7 @@ yarn install
 ## Usage
 
 ```ts filename="index.ts"
+
 import jsonDatabase from "./src/JsonAPI";
 import createId from "./src/lib/generateId"
 //Define schema of your data
@@ -70,7 +71,7 @@ interface Todo {
 }
 
 //Insantiatite database
-const db = new jsonDatabase("file-name");
+const db = new jsonDatabase<Todo>("file-name");
 
 // insert data
 const insertItem = async  () => {
@@ -83,47 +84,47 @@ const insertItem = async  () => {
     },
   });
 }
-    //Insert many data
-  const insertItems = async ()=>{
-  const todos: Todo[] = [
-    {
-      id: createId(),
-      name: "Write a report",
-      status: "pending",
-      author: {
-        name: "Bob",
-      },
+  //Insert many data
+const insertItems = async ()=>{
+const todos: Todo[] = [
+  {
+    id: createId(),
+    name: "Write a report",
+    status: "pending",
+    author: {
+      name: "Bob",
     },
-    {
-      id: createId(),
-      name: "Pay bills",
-      status: "completed",
-      author: {
-        name: "Charlie",
-      },
+  },
+  {
+    id: createId(),
+    name: "Pay bills",
+    status: "completed",
+    author: {
+      name: "Charlie",
     },
-    {
-      id: createId(),
-      name: "Go for a run",
-      status: "completed",
-      author: {
-        name: "David",
-      },
+  },
+  {
+    id: createId(),
+    name: "Go for a run",
+    status: "completed",
+    author: {
+      name: "David",
     },
-    {
-      id: createId(),
-      name: "Read a book",
-      status: "archive",
-      author: {
-        name: "Eve",
-      },
+  },
+  {
+    id: createId(),
+    name: "Read a book",
+    status: "archive",
+    author: {
+      name: "Eve",
     },
-  ];
+  },
+];
 
-  // pass todos items to const
-  const items = db.insert(todos);
+// pass todos items to const
+const items = db.insert(todos);
 
-  return items;
+return items;
 
 };
 
@@ -141,20 +142,27 @@ const selectItems = async ()=>{
   return item;
 }
 
+Update single item from database
 const updateItem = async ()=>{
   // Delete todos item from todos database where author name eqauls Abu Balo
   db.updateOne({status: "completed"}).where("author.name").equals("John Doe").run();
 }
+
+// Update many items from database
 const updateAllItems = async ()=>{
   // update todos.name and todos.status, from todos database where author name eqauls Abu Balo
-  const item = db.updateAll({name: "Cook the meal", status : "Completed"}).where("author.name").equals("Abu Balo").run();
+  const item = db.updateAll({name: "Cook the meal", status : "completed"}).where("author.name").equals("Abu Balo").run();
   return item;
 }
+
+// Delete single item from database
 const DeleteItem = async ()=>{
   // Delete todo item from todos database where author name eqauls Abu Balo
   const item = db.deleteOne().where("author.name").equals("Abu Balo").run();
   return item;
 }
+
+//  Delete many items from database
 const DeleteAllItems = async ()=>{
   // Delete  all todos items from todos database where author name eqauls Abu Balo
   const item = db.deleteOne().where("author.name").equals("Abu Balo").run();
