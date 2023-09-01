@@ -56,7 +56,7 @@ yarn install
 
 ## Usage
 
-```ts
+```ts filename="index.ts"
 import jsonDatabase from "./src/JsonAPI";
 import createId from "./src/lib/generateId"
 //Define schema of your data
