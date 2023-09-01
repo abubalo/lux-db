@@ -1,7 +1,9 @@
-import { JSONDatatbase } from "./JsonAPI";
+import { createId } from "@paralleldrive/cuid2";
+import JSONDatatbase from "./JsonAPI";
+import ID from "./lib/generateId";
 
 interface Todo {
-  id: number;
+  id: string;
   name: string;
   status: "pending" | "completed" | "archive";
   author: {
@@ -12,14 +14,52 @@ interface Todo {
 const db = new JSONDatatbase<Todo>("todo");
 
 (async () => {
-    // const todo = db.insert({
-    //   id: Math.floor(Math.random() * 10_000_000),
-    //   name: "Mop the floor",
-    //   status: "pending",
-    //   author: {
-    //     name: "Jamiu",
-    //   },
-    // });
+  const todos: Todo[] = [
+    {
+      id: createId(),
+      name: "Buy groceries",
+      status: "pending",
+      author: {
+        name: "Alice",
+      },
+    },
+    {
+      id: createId(),
+      name: "Write a report",
+      status: "pending",
+      author: {
+        name: "Bob",
+      },
+    },
+    {
+      id: createId(),
+      name: "Pay bills",
+      status: "completed",
+      author: {
+        name: "Charlie",
+      },
+    },
+    {
+      id: createId(),
+      name: "Go for a run",
+      status: "completed",
+      author: {
+        name: "David",
+      },
+    },
+    {
+      id: createId(),
+      name: "Read a book",
+      status: "archive",
+      author: {
+        name: "Eve",
+      },
+    },
+  ];
+  
+  db.insert(todos);
+  
+  
 
   // const todo = db
   //   .select("name", "author.name", "status")
@@ -29,6 +69,8 @@ const db = new JSONDatatbase<Todo>("todo");
   //   .equals("John Doe")
   //   .run();
 
-  const todo = db.getOne("name", "author", "status").where("status").equals("pending").run();
-  console.log(todo);
+  // const todo = db.getOne("name", "author", "status").where("status").equals("pending").run();
+  // const todo = db.getAll("name", "author", "status").where("status").equals("pending").run();
+  // const todo = db.updateOne({status: "completed"}).where("name").equals("John doe").run();
+  // console.log(todo);
 })();
