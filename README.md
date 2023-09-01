@@ -24,8 +24,8 @@ The JSONDatabase project is a personal endeavor to deepen TypeScript skills by b
 ## Features
 
 - Create, Read, Update, and Delete (CRUD) operations on JSON data.
-- Query capabilities with various matchers for retrieving, updating, and deleting data.
-- Simple and lightweight implementation suitable for working with small-scale projects.
+- Query capabilities with various `matchers` for retrieving, updating, and deleting data.
+- Simple and lightweight implementation suitable for working with small-scale Typescript projects.
 
 ## Getting Started
 
@@ -55,6 +55,112 @@ yarn install
 ```
 
 ## Usage
+
+```ts
+import jsonDatabase from "./src/JsonAPI";
+import createId from "./src/lib/generateId"
+//Define schema of your data
+interface Todo {
+  id: string;
+  name: string;
+  status: "pending" | "completed" | "archive";
+  author: {
+    name: string;
+  };
+}
+
+//Insantiatite database
+const db = new jsonDatabase("file-name");
+
+// insert data
+const insertItem = async  () => {
+  db.insert({
+    id: createId(),
+    name: "Buy groceries",
+    status: "pending",
+    author: {
+      name: "Alice",
+    },
+  });
+}
+    //Insert many data
+  const insertItems = async ()=>{
+  const todos: Todo[] = [
+    {
+      id: createId(),
+      name: "Write a report",
+      status: "pending",
+      author: {
+        name: "Bob",
+      },
+    },
+    {
+      id: createId(),
+      name: "Pay bills",
+      status: "completed",
+      author: {
+        name: "Charlie",
+      },
+    },
+    {
+      id: createId(),
+      name: "Go for a run",
+      status: "completed",
+      author: {
+        name: "David",
+      },
+    },
+    {
+      id: createId(),
+      name: "Read a book",
+      status: "archive",
+      author: {
+        name: "Eve",
+      },
+    },
+  ];
+
+  // pass todos items to const
+  const items = db.insert(todos);
+
+  return items;
+
+};
+
+// Selecting item from database
+const selectItem = async ()=>{
+  // select todos.name,  todos.author, and todos.status from todos database where status eqauls pending
+  const todo = db.getOne("name", "author", "status").where("status").equals("pending").run();
+  return todo;
+}
+
+// Selecting all from todo database
+const selectItems = async ()=>{
+  // select all ids, names, and authors from todos database where author name eqauls John Doe
+  const item = db.getOne("id","name", "author").where("author.name").equals("John Doe").run();
+  return item;
+}
+
+const updateItem = async ()=>{
+  // Delete todos item from todos database where author name eqauls Abu Balo
+  db.updateOne({status: "completed"}).where("author.name").equals("John Doe").run();
+}
+const updateAllItems = async ()=>{
+  // update todos.name and todos.status, from todos database where author name eqauls Abu Balo
+  const item = db.updateAll({name: "Cook the meal", status : "Completed"}).where("author.name").equals("Abu Balo").run();
+  return item;
+}
+const DeleteItem = async ()=>{
+  // Delete todo item from todos database where author name eqauls Abu Balo
+  const item = db.deleteOne().where("author.name").equals("Abu Balo").run();
+  return item;
+}
+const DeleteAllItems = async ()=>{
+  // Delete  all todos items from todos database where author name eqauls Abu Balo
+  const item = db.deleteOne().where("author.name").equals("Abu Balo").run();
+  return item;
+}
+```
 
 Modify the src directory to add your improvements and features.
 
