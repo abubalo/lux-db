@@ -1,114 +1,68 @@
-# JSON Database
+# JSONDatabase
 
-JSONDB is a lightweight and versatile JSON database that provides a simple yet powerful solution for storing and querying JSON data. With JSONDB, you can easily persist and manipulate structured data in a JSON format. JSONDB is a great choice for simple applications where data can be stored along with server logic.
+![GitHub](https://img.shields.io/github/license/abubalo/json-database)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.2.2-blue)
+![Node.js](https://img.shields.io/badge/Node.js-14.x-green)
+
+A personal project aimed at enhancing TypeScript knowledge by implementing a simple JSON database with query capabilities.
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Features](#features)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Introduction
+
+The JSONDatabase project is a personal endeavor to deepen TypeScript skills by building a basic JSON database system. It's designed to provide a hands-on experience with TypeScript concepts and best practices.
 
 ## Features
 
-- **Easy to Use**: JSONDB offers a user-friendly interface for storing, retrieving, and managing JSON data.
-- **Query Capabilities**: Perform advanced queries on your JSON data using a flexible and intuitive query syntax.
-  <!-- - **Command-Line Interface (CLI)**: Interact with the database through a command-line interface, allowing for automation and scriptability. -->
-  <!-- - **Graphical User Interface (GUI)**: Access the database using a graphical user interface with intuitive data visualization and query building tools. -->
-  <!-- - **Data Integrity**: JSONDB ensures data integrity by providing validation and schema evolution mechanisms. -->
-- **Performance Optimization**: Optimize database performance using indexing and caching techniques.
-  <!-- - **Security**: Protect your data with built-in security features such as authentication and access control. -->
-  **Integration**Seamlessly integrates JSONDB with your existing tools, frameworks, and systems.
+- Create, Read, Update, and Delete (CRUD) operations on JSON data.
+- Query capabilities with various matchers for retrieving, updating, and deleting data.
+- Simple and lightweight implementation suitable for working with small-scale projects.
 
-<!-- ## Installation
+## Getting Started
 
-To install JSONDB, follow these steps:
+### Prerequisites
 
-1. Clone the repository: `git clone https://github.com/abubalo/jsondb.git`
-2. Install dependencies: `npm install`
-3. Start the JSONDB server: `npm start` -->
+- Node.js (version 14.x or higher)
+- npm (usually comes with Node.js)
+
+### Installation
+
+1. Clone the repository:
+
+```sh
+   git clone https://github.com/your-username/json-database.git
+```
+
+Navigate to the project directory:
+
+```sh
+cd json-database
+```
+
+Install dependencies:
+
+```sh
+yarn install
+```
 
 ## Usage
 
-To start using JSONdb, follow these steps:
+Modify the src directory to add your improvements and features.
 
-Install JSONdb by running `npm install jsondb` or `yarn add jsondb`.
+Run the TypeScript compiler to compile the code:
 
-Import the JSONdb module into your project.
-Initialize the database with the path to your JSON data file.
-
-Utilize the provided CRUD APIs to interact with the JSON data.
-
-Example Usage
-
-```ts filename="index.ts" switcher
-
-import JSONdb from 'jsondb';
-
-
-// Define the  schema
-interface Todo {
-    id: number;
-  name: string;
-  status: "pending" | "completed" | "archive";
-  author: {
-      name: string;
-  };
-}
-
-// Initialize the database
-const db = new JSONdb<Todo>();
-
-// Insert a new record
-const data = { name: 'John Doe', age: 30, country: 'USA' };
-db.insert(data);
-
-// Retrieve a record
-const record = db.find("todo").where("id").equals("3");
-
-// Update a record
-record.update.where("id").equals("2").set(age: 31);
-db.update(record);
-
-// Delete a record
-db.delete({ name: 'John Doe' });
-
+```sh
+yarn run local
 ```
 
-<!-- ### Command-Line Interface (CLI)
-
-The CLI provides a powerful way to interact with JSONDB through command-line commands. Here are some examples:
-
-```bash
-# Insert data into the database
-$ jsondb insert --data '{name: John Doe, age: 30, country: USA}'
-
-# Query data from the database
-$ jsondb query --collection users --where 'age > 25' --orderBy 'name' --limit 10
-
-# Update data in the database
-$ jsondb update --collection users --where 'name = "John Doe"' --set 'age = 35'
-
-# Delete data from the database
-$ jsondb delete --collection users --where 'age < 30'
-
-```
-
-For more details on the available commands and options, refer to the CLI Documentation.
-Graphical User Interface (GUI)
-
-The GUI provides a user-friendly interface for managing your JSON data. It offers features such as:
-
-Data visualization
-Query building
-CRUD operations
-Configuration settings
-
-JSONDB GUI
-
-For instructions on how to run the GUI, refer to the GUI Documentation.
-Documentation
-
-For detailed information on using JSONDB, refer to the Documentation.
-
-`
-Getting Started
-API Reference
-Querying Data
-Advanced Features
-` -->
-
-### Licensed under the MIT License.
+License
+This project is licensed under the [MIT License](/LICENSE).
