@@ -51,11 +51,10 @@ export default class JSONDatatbase<T extends object> {
       await this.save(items);
       this._size += items.length;
       return items;
-    } else {
-      await this.save(items);
-      this._size += 1;
-      return items;
     }
+    await this.save(items);
+    this._size += 1;
+    return items;
   }
 
   /**
