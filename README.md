@@ -4,7 +4,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.2.2-blue)
 ![Node.js](https://img.shields.io/badge/Node.js-14.x-green)
 
-NodeJsonDb is a lightweight JSON database library designed to simplify JSON data storage, manipulation, and retrieval in your applications. Whether you're creating a basic to-do list app or working on a larger project, JSONDataMagic is here to assist you!
+NodeJsonDb is a lightweight JSON database library designed to simplify JSON data storage, manipulation, and retrieval in your applications.Suatible for small-scale project where data is store on the server!
 
 ## Features
 
@@ -17,7 +17,7 @@ NodeJsonDb is a lightweight JSON database library designed to simplify JSON data
 ### Prerequisites
 
 - Node.js (version 14.x or higher)
-- npm (usually comes with Node.js)
+- yarn package manager
 
 ### Installation
 
@@ -130,7 +130,7 @@ const item = db.getOne("id","name", "author").where("author.name")
 return item;
 }
 
-Update single item from database
+// Update single item from database
 const updateItem = async ()=>{
 // Delete todos item from todos database where author name equals Abu Balo
 db.updateOne({status: "completed"}).where("author.name")
