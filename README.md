@@ -169,4 +169,4 @@ yarn run local
 ```
 
 ## License
-This project is licensed under the [MIT License](/LICENSE).
+[MIT License](/LICENSE).
