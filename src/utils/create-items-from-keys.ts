@@ -1,5 +1,14 @@
-import { ObjectLiteral } from "../../types";
+import { ObjectLiteral } from "../../types/index";
 
+/**
+ * Create a new object by selecting specific keys from a source object
+ * based on a provided list of key chains.
+ *
+ * @param {string[]} keys - An array of key chains to select from the source object.
+ * @param {ObjectLiteral} data - The source object from which to select keys.
+ * @returns {ObjectLiteral} - A new object containing selected keys and their values.
+ * @throws {Error} If a key in the key chain does not exist in the source object.
+ */
 export const createItemFromKeys = (
   keys: string[],
   data: ObjectLiteral
@@ -22,8 +31,8 @@ export const createItemFromKeys = (
       const isLastKey = parts.length - 1;
       target[key] =
         target[key] ?? (isLastKey ? value : Array.isArray(value) ? [] : {});
-        target  = target[key] as ObjectLiteral;
-        source = value;
+      target = target[key] as ObjectLiteral;
+      source = value;
     });
   });
 
