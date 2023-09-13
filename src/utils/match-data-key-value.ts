@@ -1,9 +1,18 @@
 import { Matcher, ObjectLiteral, Comparator } from "../../types";
 import { getKeyChainValue } from "./get-key-chain-values";
-export const matchDataKayValue = <T>(
+
+/**
+ * Match a specific data key-value pair against a provided data object using the given comparator.
+ *
+ * @template T - The type of data being matched.
+ * @param {T} data - The data object to match against.
+ * @param {Matcher<T>} matcher - The matcher object containing the key, comparator, and value to match.
+ * @returns {boolean} - True if the data matches the provided criteria; otherwise, false.
+ */
+export const matchDataKeyValue = <T>(
   data: T,
   { comparator, key, value }: Matcher<T>
-) => {
+): boolean => {
   const val = getKeyChainValue(key as string, data as ObjectLiteral);
 
   switch (comparator) {
