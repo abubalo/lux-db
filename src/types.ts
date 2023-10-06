@@ -1,15 +1,11 @@
 export type ObjectLiteral = Record<string, unknown>;
 
-export type Collector<T> = (
-  key: KeyChain<T>,
-  comparator: Comparator,
-  value: unknown
-) => void;
+export type Collector<T> = (key: KeyChain<T>, comparator: Comparator, value: unknown) => void;
 
 export interface Matcher<T> {
-  key: KeyChain<T>,
-  comparator: Comparator,
-  value: unknown
+  key: KeyChain<T>;
+  comparator: Comparator;
+  value: unknown;
 }
 export type KeyChain<T> = keyof T | string;
 
