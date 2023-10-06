@@ -1,4 +1,4 @@
-# Lux Db
+# Lux DB
 
 ![GitHub](https://img.shields.io/github/license/abubalo/json-database)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.2.2-blue)
