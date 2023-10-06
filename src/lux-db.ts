@@ -1,5 +1,5 @@
 import JSONDatabase from "../src/JsonAPI"
-import createID from "./lib/generateId";
+import { createId } from '@paralleldrive/cuid2';
 
 // Singleton instance
 let instance: JSONDatabase<any>;
@@ -21,4 +21,4 @@ export default luxdb;
 
 
 
-export const autoId = (length?: string)=> createID()
+export const autoId = (length?: string)=> createId()
