@@ -1,10 +1,11 @@
-import * as path from "path";
-import fs from "fs";
-import { readFile, writeFile } from "fs/promises";
-import { KeyChain, Matcher, ObjectLiteral } from "../types";
-import { collect } from "./utils/collect";
-import { matchDataKayValue } from "./utils/match-data-key-value";
-import { createItemFromKeys } from "./utils/create-items-from-keys";
+import * as path from 'path';
+import fs from 'fs';
+import { readFile, writeFile } from 'fs/promises';
+import { KeyChain, Matcher, ObjectLiteral } from './types';
+import { collect } from './utils/collect';
+import { matchDataKeyValue } from './utils/match-data-key-value';
+import { createItemFromKeys } from './utils/create-items-from-keys';
+import { DatabaseError } from './lib/Errors';
 
 /**
  * Represents a simple JSON database with query capabilities.
@@ -27,17 +28,17 @@ export default class JSONDatatbase<T extends object> {
    */
   constructor(private fileName: string) {
     // Construct the file path
-    this.filePath = path.join(__dirname + "/db", `${fileName}.json`);
+    this.filePath = path.join(__dirname + '/db', `${fileName}.json`);
     try {
       // Create the database file if it doesn't exist
       if (!fs.existsSync(this.filePath)) {
         fs.writeFileSync(this.filePath, JSON.stringify([]), {
-          encoding: "utf-8",
+          encoding: 'utf-8',
         });
       }
     } catch (error) {
       console.error(`Error reading file: ${this.filePath}`, error);
-      throw new Error(`Failed to read data from ${this.fileName}`);
+      throw new DatabaseError(`Failed to read data from ${this.fileName}`);
     }
   }
 
@@ -63,24 +64,19 @@ export default class JSONDatatbase<T extends object> {
    * @returns Promise resolving to the retrieved item, or null if not found.
    */
   public getOne(...keys: KeyChain<T>[]) {
-    return collect<T, Promise<T | Partial<T> | null>>(
-      async (matchers: Matcher<T>[]) => {
-        const item = (await this.read()).find((item) => {
-          return matchers.every((matcher) => matchDataKayValue(item, matcher));
-        });
+    return collect<T, Promise<T | Partial<T> | null>>(async (matchers: Matcher<T>[]) => {
+      const item = (await this.read()).find((item) => {
+        return matchers.every((matcher) => matchDataKeyValue(item, matcher));
+      });
 
-        if (item) {
-          if (keys.length) {
-            return createItemFromKeys(
-              keys as string[],
-              item as ObjectLiteral
-            ) as Partial<T>;
-          }
-          return item;
+      if (item) {
+        if (keys.length) {
+          return createItemFromKeys(keys as string[], item as ObjectLiteral) as Partial<T>;
         }
-        return null;
+        return item;
       }
-    );
+      return null;
+    });
   }
 
   /**
@@ -89,24 +85,19 @@ export default class JSONDatatbase<T extends object> {
    * @returns Promise resolving to an array of retrieved items, or an array of partial items if keys are provided.
    */
   public getAll(...keys: KeyChain<T>[]) {
-    return collect<T, Promise<T[] | Partial<T>[]>>(
-      async (matchers: Matcher<T>[]) => {
-        const items = (await this.read()).filter((item) => {
-          return matchers.every((matcher) => matchDataKayValue(item, matcher));
+    return collect<T, Promise<T[] | Partial<T>[]>>(async (matchers: Matcher<T>[]) => {
+      const items = (await this.read()).filter((item) => {
+        return matchers.every((matcher) => matchDataKeyValue(item, matcher));
+      });
+
+      if (keys.length) {
+        return items.map((item) => {
+          return createItemFromKeys(keys as string[], item as ObjectLiteral) as Partial<T>;
         });
-
-        if (keys.length) {
-          return items.map((item) => {
-            return createItemFromKeys(
-              keys as string[],
-              item as ObjectLiteral
-            ) as Partial<T>;
-          });
-        }
-
-        return items;
       }
-    );
+
+      return items;
+    });
   }
 
   /**
@@ -118,7 +109,7 @@ export default class JSONDatatbase<T extends object> {
     return collect<T, Promise<T | null>>(async (matchers: Matcher<T>[]) => {
       const list = await this.read();
       const itemIndex = list.findIndex((item) => {
-        return matchers.every((matcher) => matchDataKayValue(item, matcher));
+        return matchers.every((matcher) => matchDataKeyValue(item, matcher));
       });
 
       if (itemIndex >= 0) {
@@ -139,7 +130,7 @@ export default class JSONDatatbase<T extends object> {
     return collect<T, Promise<T[]>>(async (matchers: Matcher<T>[]) => {
       const updateItems: T[] = [];
       const list = (await this.read()).map((item) => {
-        if (matchers.every((matcher) => matchDataKayValue(item, matcher))) {
+        if (matchers.every((matcher) => matchDataKeyValue(item, matcher))) {
           const updateItem = { ...item, ...data };
           updateItems.push(updateItem);
           return updateItem;
@@ -161,7 +152,7 @@ export default class JSONDatatbase<T extends object> {
     return collect<T, Promise<T | null>>(async (matchers: Matcher<T>[]) => {
       const list = await this.read();
       const itemIndex = list.findIndex((item) => {
-        return matchers.every((matcher) => matchDataKayValue(item, matcher));
+        return matchers.every((matcher) => matchDataKeyValue(item, matcher));
       });
 
       if (itemIndex >= 0) {
@@ -181,9 +172,7 @@ export default class JSONDatatbase<T extends object> {
     return collect<T, Promise<T[]>>(async (matchers: Matcher<T>[]) => {
       const deleteItems: T[] = [];
       const list = (await this.read()).filter((item) => {
-        const toDelete = matchers.every((matcher) =>
-          matchDataKayValue(item, matcher)
-        );
+        const toDelete = matchers.every((matcher) => matchDataKeyValue(item, matcher));
         if (toDelete) {
           deleteItems.push(item);
           return !deleteItems;
@@ -203,7 +192,7 @@ export default class JSONDatatbase<T extends object> {
    * @private
    */
   private async read(): Promise<Array<T>> {
-    return JSON.parse(await readFile(this.filePath, "utf-8"));
+    return JSON.parse(await readFile(this.filePath, 'utf-8'));
   }
 
   /**
@@ -221,7 +210,13 @@ export default class JSONDatatbase<T extends object> {
       await writeFile(this.filePath, JSON.stringify(content));
     } catch (error) {
       console.error(`Error saving data to file: ${this.filePath}`, error);
-      throw new Error(`Failed to save data to ${this.fileName}`);
+      throw new DatabaseError(`Failed to save data to ${this.fileName}`);
     }
   }
+
+  public filter() {}
+  private indexing() {}
+
+  private count() {}
+  private cache() {}
 }
