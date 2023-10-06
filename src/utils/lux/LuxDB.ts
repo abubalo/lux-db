@@ -1,17 +1,17 @@
 import * as path from 'path';
 import fs from 'fs';
 import { readFile, writeFile } from 'fs/promises';
-import { KeyChain, Matcher, ObjectLiteral } from './types';
-import { collect } from './utils/collect';
-import { matchDataKeyValue } from './utils/match-data-key-value';
-import { createItemFromKeys } from './utils/create-items-from-keys';
-import { DatabaseError } from './lib/Errors';
+import { KeyChain, Matcher, ObjectLiteral } from '../../types';
+import { collect } from '../collect';
+import { matchDataKeyValue } from '../match-data-key-value';
+import { createItemFromKeys } from '../create-items-from-keys';
+import { DatabaseError } from '../../lib/Errors';
 
 /**
  * Represents a simple JSON database with query capabilities.
  * @template T - Type of the database items.
  */
-export default class JSONDatatbase<T extends object> {
+export default class LuxDB<T extends object> {
   private readonly filePath: string;
   private _size = 0;
 
@@ -23,7 +23,7 @@ export default class JSONDatatbase<T extends object> {
   }
 
   /**
-   * Creates a new JSONDatabase instance.
+   * Creates a new LuxDB instance.
    * @param fileName - The name of the database file (without extension).
    */
   constructor(private fileName: string) {
