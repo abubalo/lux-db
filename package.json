@@ -1,6 +1,6 @@
 {
   "name": "lux-db",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Perfomant Json database with full-featured CRUD query APIs",
   "repository": "git@github.com:abubalo/lux-db.git",
   "author": "Abubakar Balogun <42701866+abubalo@users.noreply.github.com>",
