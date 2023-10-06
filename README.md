@@ -1,172 +1,151 @@
-# NodeJsonDb
+# Lux Db
 
 ![GitHub](https://img.shields.io/github/license/abubalo/json-database)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.2.2-blue)
-![Node.js](https://img.shields.io/badge/Node.js-14.x-green)
+![Node.js](https://img.shields.io/badge/Node.js-18-yellow)
 
-NodeJsonDb is a lightweight JSON database library designed to simplify JSON data storage, manipulation, and retrieval in your applications.Suatible for small-scale project where data is store on the server!
+Lux DB is your lightweight, developer-friendly document database library, crafted to streamline the storage, manipulation, and retrieval of JSON data in your applications. It's the perfect fit for a wide range of use cases.
 
 ## Features
 
-- Create, Read, Update, and Delete (CRUD) operations on JSON data.
+- Lux DB provides a seamless way to store, update, and delete data. It supports both single-item and batch operations, ensuring you have complete control over your data.
+
 - Query capabilities with various `matchers` for retrieving, updating, and deleting data.
-- Simple and lightweight implementation suitable for working with small-scale Typescript projects.
+
+- Simple and lightweight implementation suitable for working with small-scale Javascript/Typescript projects.
+
+## Use Cases
+Here are some potential use cases for of luxDB database:
+
+- Configuration Storage: You can use this database to store and manage configuration settings for your application. Each configuration could be represented as a document in the database.
+
+- User Preference: Store user preference with attributes such as theme choices, notification settings, and custom configurations in the database.
+
+- Content Management: If you have a content-driven application, you can store articles, posts, or other content as documents in the database.
+
+- Product Catalog: Manage product information for an e-commerce website, including product details, prices, and availability.
+
+- Logging and Audit Trails: Store logs and audit trails for your application to keep track of user actions and system events.
+
+- Task Management: Implement a task management system where each task is a document in the database.
+
+- Messaging: For building a simple chat or messaging application, you can store chat messages as documents.
+
+- Session Management: Store session data for user sessions in a web application.
+
+- Data Caching: Use it as a caching mechanism for frequently accessed data.
+
+- Custom Data Storage: For any application where you need to persist custom data structures, this database can be adapted to store and manage that data.
+
+
+
+
 
 ## Getting Started
 
-### Prerequisites
-
-- Node.js (version 14.x or higher)
-- yarn package manager
-
 ### Installation
 
-1. Clone the repository:
-
-```sh
-  git clone https://github.com/your-username/json-database.git
+```bash
+  npm install --save-dev lux-db
 ```
-
-Navigate to the project directory:
-
-```sh
-cd json-database
-```
-
-Install dependencies:
-
-```sh
-yarn install
-```
-
-## Usage
 
 ```ts filename="index.ts"
 
-import jsonDatabase from "./src/JsonAPI";
-import createId from "./src/lib/generateId"
+import luxdb, { createId } from "lux-db";
 
-//Define schema of your data
+// Define the schema of your data
 interface Todo {
-id: string;
-name: string;
-status: "pending" | "completed" | "archive";
-author: {
+  id: string;
   name: string;
-};
+  status: "pending" | "completed" | "archive";
+  author: {
+    name: string;
+  };
 }
 
-// Instantiate database
-const db = new jsonDatabase<Todo>("file-name");
+// Instantiate the database
+const db = luxdb<Todo>("file-name");
 
-// insert data
-const insertItem = async  () => {
-db.insert({
-  id: createId(),
-  name: "Buy groceries",
-  status: "pending",
-  author: {
-    name: "Alice",
-  },
-});
-}
-//Insert many items
-const insertItems = async ()=>{
-const todos: Todo[] = [
-{
-  id: createId(),
-  name: "Write a report",
-  status: "pending",
-  author: {
-    name: "Bob",
-  },
-},
-{
-  id: createId(),
-  name: "Pay bills",
-  status: "completed",
-  author: {
-    name: "Charlie",
-  },
-},
-{
-  id: createId(),
-  name: "Go for a run",
-  status: "completed",
-  author: {
-    name: "David",
-  },
-},
-{
-  id: createId(),
-  name: "Read a book",
-  status: "archive",
-  author: {
-    name: "Eve",
-  },
-},
-];
-
-// Pass todos items to insert function
-const items = db.insert(todos);
-
-return items;
-
+// Insert a single item
+const insertItem = async () => {
+  db.insert({
+    id: createId(),
+    name: "Buy groceries",
+    status: "pending",
+    author: {
+      name: "Alice",
+    },
+  });
 };
 
-// Selecting item from database
-const selectItem = async ()=>{
-// select todos.name,  todos.author, and todos.status from todos database where status equals pending
-const todo = db.getOne("name", "author", "status").where("status")
-.equals("pending").run();
-return todo;
-}
+// Insert multiple items
+const insertItems = async () => {
+  const todos: Todo[] = [
+    {
+      id: createId(),
+      name: "Write a report",
+      status: "pending",
+      author: {
+        name: "Bob",
+      },
+    },
+    // ... more items
+  ];
 
-// Selecting all from todo database
-const selectItems = async ()=>{
-// select all ids, names, and authors from todos database where author name equals John Doe
-const item = db.getOne("id","name", "author").where("author.name")
-.equals("John Doe").run();
-return item;
-}
+  // Insert multiple items into the database
+  const items = await db.insert(todos);
 
-// Update single item from database
-const updateItem = async ()=>{
-// Delete todos item from todos database where author name equals Abu Balo
-db.updateOne({status: "completed"}).where("author.name")
-.equals("John Doe").run();
-}
+  return items;
+};
 
-// Update many items from database
-const updateAllItems = async ()=>{
-// update todos.name and todos.status, from todos database where author name equals Abu Balo
-const item = db.updateAll({name: "Cook the meal", status : "completed"})
-.where("author.name").equals("Abu Balo").run();
-return item;
-}
+// Select a single item from the database
+const selectItem = async () => {
+  // Select an item where the status is "pending"
+  const todo = db.getOne("name", "author", "status").where("status").equals("pending").run();
+  return todo;
+};
 
-// Delete single item from database
-const DeleteItem = async ()=>{
-// Delete todo item from todos database where author name equals Abu Balo
-const item = db.deleteOne().where("author.name").equals("Abu Balo").run();
-return item;
-}
+// Select all items from the database
+const selectItems = async () => {
+  // Select items where the author's name is "John Doe"
+  const items = db.getAll("id", "name", "author").where("author.name").equals("John Doe").run();
+  return items;
+};
 
-//  Delete many items from database
-const DeleteAllItems = async ()=>{
-// Delete  all todos items from todos database where author name equals Abu Balo
-const item = db.deleteOne().where("author.name").equals("Abu Balo").run();
-return item;
-}
+// Update a single item in the database
+const updateItem = async () => {
+  // Update an item where the author's name is "John Doe" to have a "completed" status
+  db.updateOne({ status: "completed" }).where("author.name").equals("John Doe").run();
+};
+
+// Update multiple items in the database
+const updateAllItems = async () => {
+  // Update items where the author's name is "Abu Balo" to have a new name and status
+  const items = db.updateAll({ name: "Cook the meal", status: "completed" }).where("author.name").equals("Abu Balo").run();
+  return items;
+};
+
+// Delete a single item from the database
+const deleteItem = async () => {
+  // Delete an item where the author's name is "Abu Balo"
+  const item = db.deleteOne().where("author.name").equals("Abu Balo").run();
+  return item;
+};
+
+// Delete multiple items from the database
+const deleteAllItems = async () => {
+  // Delete all items where the author's name is "Abu Balo"
+  const items = db.deleteAll().where("author.name").equals("Abu Balo").run();
+  return items;
+};
+
 ```
 
-Modify the src directory to add your improvements and features.
+Run `npx run luxdb filename` in the terminal to execute your query
 
-Run the TypeScript compiler to compile the code:
 
-```sh
-yarn run local
-```
+
+> **Disclaimer:** Please note that this database is relatively simple and may not be suitable for very large-scale or high-performance applications. It lacks features like indexing, complex querying, and transaction support that more robust databases like SQL or NoSQL databases provide. However, for small to medium-sized applications or prototyping, it can be a convenient and lightweight solution.
 
 ## License
 [MIT License](/LICENSE).
