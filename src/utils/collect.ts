@@ -1,5 +1,5 @@
-import { Comparator, Matcher, KeyChain } from "../../types/index";
-import { where } from "./where";
+import { Comparator, Matcher, KeyChain } from '../types';
+import { where } from './where';
 
 /**
  * Factory function to create a query builder for filtering data.

@@ -1,5 +1,5 @@
-import { Matcher, ObjectLiteral, Comparator } from "../../types";
-import { getKeyChainValue } from "./get-key-chain-values";
+import { Matcher, ObjectLiteral, Comparator } from '../types';
+import { getKeyChainValue } from './get-key-chain-values';
 
 /**
  * Match a specific data key-value pair against a provided data object using the given comparator.
@@ -9,10 +9,7 @@ import { getKeyChainValue } from "./get-key-chain-values";
  * @param {Matcher<T>} matcher - The matcher object containing the key, comparator, and value to match.
  * @returns {boolean} - True if the data matches the provided criteria; otherwise, false.
  */
-export const matchDataKeyValue = <T>(
-  data: T,
-  { comparator, key, value }: Matcher<T>
-): boolean => {
+export const matchDataKeyValue = <T>(data: T, { comparator, key, value }: Matcher<T>): boolean => {
   const val = getKeyChainValue(key as string, data as ObjectLiteral);
 
   switch (comparator) {
@@ -23,10 +20,7 @@ export const matchDataKeyValue = <T>(
       return val !== value;
 
     case Comparator.Between:
-      return (
-        Number(val) > Number((value as Array<number>)[0]) &&
-        Number(val) < Number((value as Array<number>)[1])
-      );
+      return Number(val) > Number((value as Array<number>)[0]) && Number(val) < Number((value as Array<number>)[1]);
 
     case Comparator.GreaterOrEqual:
       return Number(val) >= Number(value);
@@ -41,9 +35,7 @@ export const matchDataKeyValue = <T>(
       return Number(val) < Number(value);
 
     case Comparator.Matches:
-      return typeof value === "string"
-        ? new RegExp(value).test(`${val}`)
-        : (value as RegExp).test(`${val}`);
+      return typeof value === 'string' ? new RegExp(value).test(`${val}`) : (value as RegExp).test(`${val}`);
 
     default:
       return false;

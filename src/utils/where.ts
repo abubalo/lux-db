@@ -1,4 +1,4 @@
-import { Collector, Comparator, KeyChain } from "../../types";
+import { Collector, Comparator, KeyChain } from '../types';
 
 /**
  * Create a query builder for filtering data based on key-value comparisons.
@@ -9,10 +9,7 @@ import { Collector, Comparator, KeyChain } from "../../types";
  * @param {function(): Promise<R>} runner - A function for executing the query.
  * @returns {function(KeyChain<T>): object} - A function that generates filter conditions for a specific key.
  */
-export const where = <T, R>(
-  collector: Collector<T>,
-  runner: () => Promise<R>
-) => {
+export const where = <T, R>(collector: Collector<T>, runner: () => Promise<R>) => {
   return (key: KeyChain<T>) => {
     return {
       /**
