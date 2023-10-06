@@ -46,7 +46,7 @@ Here are some potential use cases for of luxDB database:
 ### Installation
 
 ```bash
-  npm install --save-dev lux-db
+  npm i lux-db --save-dev
 ```
 
 ```ts filename="index.ts"
@@ -141,7 +141,7 @@ const deleteAllItems = async () => {
 
 ```
 
-Run `npx run luxdb filename` in the terminal to execute your query
+<!-- Run `npx run luxdb filename` in the terminal to execute your query -->
 
 
 
