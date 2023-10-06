@@ -1,19 +1,20 @@
-import JSONDatabase from "../src/JsonAPI"
+import LuxDB from "./utils/lux/LuxDB"
 import { createId } from '@paralleldrive/cuid2';
 
+
 // Singleton instance
-let instance: JSONDatabase<any>;
+let instance: LuxDB<any>;
 
 /**
- * Create and return a single/global instance of the JSONDatabase.
+ * Create and return a single/global instance of the LuxDB.
  * @param fileName - The name of the database file (without extension).
- * @returns The JSONDatabase instance.
+ * @returns The LuxDB instance.
  */
 const luxdb = <T extends object>(fileName: string) => {
   if (!instance) {
-    instance = new JSONDatabase<T>(fileName);
+    instance = new LuxDB<T>(fileName);
   }
-  return instance as JSONDatabase<T>;
+  return instance as LuxDB<T>;
 };
 
 export default luxdb;
