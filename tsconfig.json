@@ -6,9 +6,11 @@
     "strict": true,
     "noEmitOnError": true,
     "esModuleInterop": true,
+    "types": ["node"],
     "lib": ["es2018", "DOM"],
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "typeRoots": ["./src/index.d.ts"]
   },
-  "include": ["src/**/*", "types.d.ts"],
+  "include": ["src/**/*", "src/index.d.ts", "src/types.ts"],
   "exclude": ["node_modules"]
 }
