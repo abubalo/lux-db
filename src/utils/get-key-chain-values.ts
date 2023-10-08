@@ -1,4 +1,4 @@
-import { ObjectLiteral } from '../types';
+import { ObjectLiteral } from '..';
 
 /**
  * Get the value associated with a given key chain from a source object.
