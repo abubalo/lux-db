@@ -1,0 +1,33 @@
+# Development and build files
+gulpfile.js
+webpack.config.js
+.vscode/
+dist/
+build/
+.github/
+
+# Dependency management files
+package-lock.json
+yarn.lock
+node_modules/
+
+# Version control files
+.git/
+.gitignore
+.gitattributes
+
+# Configuration files
+.eslintrc
+.prettierrc
+babel.config.js
+
+# Documentation and examples
+docs/
+.doc
+examples/
+
+# Temporary or generated files
+*.log
+*.tmp
+src/db/
+src/log/
