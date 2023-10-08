@@ -8,6 +8,7 @@
       "esModuleInterop": true,
       "types": ["node", "jest", "mocha"],
       "lib": ["es2018"],
+      "outDir": "./build",
       "rootDir": "./src"
     },
     "include": ["src/**/*", "package.json"],
