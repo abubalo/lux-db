@@ -1,8 +1,8 @@
 # Lux DB
 
-![GitHub](https://img.shields.io/github/license/abubalo/json-database)
+![GitHub](https://img.shields.io/github/license/abubalo/lux-db)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.2.2-blue)
-![Node.js](https://img.shields.io/badge/Node.js-18-yellow)
+![Version](https://img.shields.io/badge/Version-18-yellow)
 
 Lux DB is your lightweight, developer-friendly document database library, crafted to streamline the storage, manipulation, and retrieval of JSON data in your applications. It's the perfect fit for a wide range of use cases.
 
@@ -101,47 +101,47 @@ const insertItems = async () => {
 // Select a single item from the database
 const selectItem = async () => {
   // Select an item where the status is "pending"
-  const todo = db.getOne("name", "author", "status").where("status").equals("pending").run();
+  const todo = await db.getOne("name", "author", "status").where("status").equals("pending").run();
   return todo;
 };
 
 // Select all items from the database
 const selectItems = async () => {
   // Select items where the author's name is "John Doe"
-  const items = db.getAll("id", "name", "author").where("author.name").equals("John Doe").run();
+  const items = await db.getAll("id", "name", "author").where("author.name").equals("John Doe").run();
   return items;
 };
 
 // Update a single item in the database
 const updateItem = async () => {
   // Update an item where the author's name is "John Doe" to have a "completed" status
-  db.updateOne({ status: "completed" }).where("author.name").equals("John Doe").run();
+  await db.updateOne({ status: "completed" }).where("author.name").equals("John Doe").run();
 };
 
 // Update multiple items in the database
 const updateAllItems = async () => {
   // Update items where the author's name is "Abu Balo" to have a new name and status
-  const items = db.updateAll({ name: "Cook the meal", status: "completed" }).where("author.name").equals("Abu Balo").run();
+  const items = await db.updateAll({ name: "Cook the meal", status: "completed" }).where("author.name").equals("Abu Balo").run();
   return items;
 };
 
 // Delete a single item from the database
 const deleteItem = async () => {
   // Delete an item where the author's name is "Abu Balo"
-  const item = db.deleteOne().where("author.name").equals("Abu Balo").run();
+  const item = await db.deleteOne().where("author.name").equals("Abu Balo").run();
   return item;
 };
 
 // Delete multiple items from the database
 const deleteAllItems = async () => {
   // Delete all items where the author's name is "Abu Balo"
-  const items = db.deleteAll().where("author.name").equals("Abu Balo").run();
+  const items = await db.deleteAll().where("author.name").equals("Abu Balo").run();
   return items;
 };
 
 ```
 
-<!-- Run `npx run luxdb filename` in the terminal to execute your query -->
+You can `ts-node {your-ts-file.ts}` in the terminal to execute your query
 
 
 
