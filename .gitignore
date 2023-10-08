@@ -1,4 +1,6 @@
 node_modules/
-yarn-error.log
+# database document
 src/db
 
+# package manager
+package-lock.json
