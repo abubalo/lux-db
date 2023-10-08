@@ -1,16 +1,15 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "CommonJS",
-    "allowJs": false,
-    "strict": true,
-    "noEmitOnError": true,
-    "esModuleInterop": true,
-    "types": ["node"],
-    "lib": ["es2018", "DOM"],
-    "rootDir": "./src",
-    "typeRoots": ["./src/index.d.ts"]
-  },
-  "include": ["src/**/*", "src/index.d.ts", "src/types.ts"],
-  "exclude": ["node_modules"]
-}
+    "compilerOptions": {
+      "target": "ESNext",
+      "module": "CommonJS",
+      "allowJs": false,
+      "strict": true,
+      "noEmitOnError": true,
+      "esModuleInterop": true,
+      "types": ["node", "jest", "mocha"],
+      "lib": ["es2018"],
+      "rootDir": "./src"
+    },
+    "include": ["src/**/*", "package.json"],
+    "exclude": ["node_modules", "LuxDB.test.ts"]
+  }
