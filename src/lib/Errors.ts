@@ -19,8 +19,12 @@ export class StackTraceError extends Error {
 }
 
 export class FileNotFoundError extends Error {
-  constructor(filePath: string) {
+  errorCode?: number;
+  timestamp: Date;
+  constructor(filePath: string, errorCode?: number) {
     super(`File not found: ${filePath}`);
     this.name = 'FileNotFoundError';
+    this.errorCode = errorCode;
+    this.timestamp = new Date();
   }
 }
