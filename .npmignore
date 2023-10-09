@@ -20,6 +20,9 @@ node_modules/
 .eslintrc
 .prettierrc
 babel.config.js
+jest.config.js
+*.test
+*.spec
 
 # Documentation and examples
 docs/
@@ -31,3 +34,5 @@ examples/
 *.tmp
 src/db/
 src/log/
+
+
