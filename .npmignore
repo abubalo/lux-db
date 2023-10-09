@@ -2,8 +2,6 @@
 gulpfile.js
 webpack.config.js
 .vscode/
-dist/
-build/
 .github/
 
 # Dependency management files
