@@ -52,6 +52,7 @@ export default class LuxDB<T extends object> {
         });
         console.log(`Database file created at ${this.filePath}`);
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.code === 'ENOENT') {
         // Throw a custom FileNotFoundError if the file doesn't exist
@@ -78,7 +79,7 @@ export default class LuxDB<T extends object> {
     this._size += 1;
     return items;
   }
-
+  
   /**
    * Retrieve a single item from the database based on specified keys.
    * @param keys - Keys to match for retrieving the item.
@@ -235,9 +236,4 @@ export default class LuxDB<T extends object> {
     }
   }
 
-  public filter() {}
-  private indexing() {}
-
-  private count() {}
-  private cache() {}
 }
