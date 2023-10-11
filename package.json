@@ -1,15 +1,20 @@
 {
   "name": "lux-db",
-  "version": "1.0.2",
-  "description": "Perfomant Json database with full-featured CRUD query APIs",
+  "version": "1.0.3",
+  "description": "A high-performance document-based JSON database equiped with CRUD query API functionalities",
   "repository": "git@github.com:abubalo/lux-db.git",
   "author": "Abubakar Balogun <42701866+abubalo@users.noreply.github.com>",
   "license": "MIT",
-  "main": "./build/src/lux-db.js",
+  "main": "dist/lux-db.js",
+  "module": "dist/lux-db.mjs",
+  "types": "dist/lux-db.d.ts",
+  "files": [
+    "./build"
+  ],
   "private": false,
   "scripts": {
     "clean": "rimraf ./build",
-    "build": "npm-run-all format lint test clean && tsc",
+    "build": "npm-run-all clean lint && tsup src/**/*.ts --format cjs,esm --dts  ",
     "start": "node src",
     "local": "ts-node src",
     "local:watch": "nodemon src -e ts,json --exec 'yarn run local'",
@@ -24,11 +29,14 @@
     "json-database",
     "json database",
     "typescript json database",
-    "javascript json database"
+    "javascript json database",
+    "js-db"
   ],
   "devDependencies": {
+    "@changesets/cli": "^2.26.2",
     "@paralleldrive/cuid2": "^2.2.2",
     "@types/jest": "^29.5.5",
+    "@types/node": "^20.8.3",
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "@typescript-eslint/parser": "^5.52.0",
@@ -43,6 +51,16 @@
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
+    "tsup": "^7.2.0",
     "zod": "^3.22.3"
+  },
+  "exports": {
+    ".": {
+      "import": "./build/src/lux-db.mjs",
+      "require": "./build/src/lux-db.js"
+    }
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
