@@ -1,16 +1,20 @@
 {
     "compilerOptions": {
-      "target": "ESNext",
+      "target": "ES2022",
       "module": "CommonJS",
       "allowJs": false,
       "strict": true,
       "noEmitOnError": true,
       "esModuleInterop": true,
-      "types": ["node", "jest", "mocha"],
+      "skipLibCheck": true,
+      "noEmit": true,
+      "forceConsistentCasingInFileNames": true,
+      "types": ["node", "jest"],
       "lib": ["es2018"],
-      "outDir": "./build",
-      "rootDir": "./src"
+      "outDir": "./dist",
+      "rootDir": "./src",
+      "baseUrl": "./"
     },
     "include": ["src/**/*", "package.json"],
-    "exclude": ["node_modules", "LuxDB.test.ts"]
+    "exclude": ["node_modules", "src/LuxDB.test.ts", "./dist"]
   }
