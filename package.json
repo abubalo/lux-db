@@ -1,6 +1,6 @@
 {
   "name": "lux-db",
-  "version": "1.0.3",
+  "version": "1.0.8",
   "description": "A high-performance document-based JSON database equiped with CRUD query API functionalities",
   "repository": "git@github.com:abubalo/lux-db.git",
   "author": "Abubakar Balogun <42701866+abubalo@users.noreply.github.com>",
@@ -9,7 +9,7 @@
   "module": "dist/lux-db.mjs",
   "types": "dist/lux-db.d.ts",
   "files": [
-    "./build"
+    "./dist"
   ],
   "private": false,
   "scripts": {
@@ -30,7 +30,11 @@
     "json database",
     "typescript json database",
     "javascript json database",
-    "js-db"
+    "js-db",
+    "lux-db",
+    "luxDB",
+    "lux DB",
+    "luxdb"
   ],
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
