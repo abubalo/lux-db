@@ -1,4 +1,4 @@
-import LuxDB from "./src/LuxDB";
+import LuxDB from "./LuxDB";
 import fs from 'fs';
 import { promisify } from 'util';
 
