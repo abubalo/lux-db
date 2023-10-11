@@ -1,4 +1,4 @@
-# Lux DB
+# LuxDB
 
 ![GitHub](https://img.shields.io/github/license/abubalo/lux-db)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.2.2-blue)
@@ -6,11 +6,11 @@
 [![NPM Downloads](https://img.shields.io/npm/dw/lux-db)](https://www.npmjs.com/package/lux-db)
 
 
-Lux DB is your lightweight, developer-friendly document database library, crafted to streamline the storage, manipulation, and retrieval of JSON data in your applications. It's the perfect fit for a wide range of use cases.
+LuxDB is your lightweight, developer-friendly document database library, crafted to streamline the storage, manipulation, and retrieval of JSON data in your applications. It's the perfect fit for a wide range of use cases.
 
 ## Features
 
-- Lux DB provides a seamless way to store, update, and delete data. It supports both single-item and batch operations, ensuring you have complete control over your data.
+- LuxDB provides a seamless way to store, update, and delete data. It supports both single-item and batch operations, ensuring you have complete control over your data.
 
 - Query capabilities with various `matchers` for retrieving, updating, and deleting data.
 
@@ -18,7 +18,7 @@ Lux DB is your lightweight, developer-friendly document database library, crafte
 
 ## Use Cases
 
-Here are some potential use cases of luxDB database:
+There are several potential use cases of luxDB, among them are:
 
 - Configuration Storage: You can use this database to store and manage configuration settings for your application. Each configuration could be represented as a document in the database.
 
@@ -47,13 +47,13 @@ In addition to its boundless possibilities, LuxDB offers the advantage of type s
 ### Installation
 
 ```bash
-  npm i lux-db --save-dev
+npm i lux-db --save-dev
 ```
 
 ### Usage
 
 ```ts filename="index.ts"
-import luxdb, { createId } from 'lux-db';
+import luxdb, { autoId } from 'lux-db';
 
 // Define the schema of your data
 interface Todo {
@@ -65,26 +65,29 @@ interface Todo {
   };
 }
 
-// Instantiate the database
-const db = luxdb<Todo>('file-name');
+// Instantiate the database. 
+// Specify name with not extionsion, and destionation directory(optional). If destionation is not provided, the default will be 'db' 
+const db = luxdb<Todo>('file-name', "my-db");
 
 // Insert a single item
 const insertItem = async () => {
-  db.insert({
-    id: createId(),
+  const item = await db.insert({
+    id: autoId(),
     name: 'Buy groceries',
     status: 'pending',
     author: {
       name: 'Alice',
     },
   });
+
+  return item
 };
 
 // Insert multiple items
 const insertItems = async () => {
   const todos: Todo[] = [
     {
-      id: createId(),
+      id: autoId(),
       name: 'Write a report',
       status: 'pending',
       author: {
