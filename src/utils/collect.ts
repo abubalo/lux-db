@@ -1,4 +1,4 @@
-import { Comparator, Matcher, KeyChain } from '..';
+import { Comparator, Matcher, KeyChain } from '../index';
 import { where } from './where';
 
 /**
