@@ -1,7 +1,7 @@
 import * as path from 'path';
-import fs from 'fs';
+import fs, { existsSync } from 'fs';
 import { readFile, writeFile } from 'fs/promises';
-import { KeyChain, Matcher, ObjectLiteral } from '.';
+import { KeyChain, Matcher, ObjectLiteral } from './index';
 import { collect } from './utils/collect';
 import { matchDataKeyValue } from './utils/match-data-key-value';
 import { createItemFromKeys } from './utils/create-items-from-keys';
@@ -26,23 +26,19 @@ export default class LuxDB<T extends object> {
  * Creates a new LuxDB instance.
  *
  * @param {string} fileName - The name of the database file (without extension).
- * @param {string} location - The location for the database (default is 'db' if not specified).
+ * @param {string} destination - The destination for the database (default is 'db' if not specified).
  * @throws {FileNotFoundError} Throws a custom error if the database file is not found.
  * @throws {DatabaseError} Throws a custom error for other initialization errors.
  */
   constructor(
     private fileName: string,
-    private location = 'db',
+    private destination = "db"
   ) {
-    // Construct the file path
-    this.filePath = path.resolve(__dirname, location, `${fileName}.json`);
+
+    // Construct the full file path
+    this.filePath = path.join(this.createDir(destination), `${fileName}.json`);
 
     try {
-      // Ensure the location folder exists; create it if it doesn't
-      const locationPath = path.resolve(__dirname, location);
-      if (!fs.existsSync(locationPath)) {
-        fs.mkdirSync(locationPath, { recursive: true });
-      }
 
       // Check if the database file exists
       if (!fs.existsSync(this.filePath)) {
@@ -233,6 +229,18 @@ export default class LuxDB<T extends object> {
     } catch (error) {
       console.error(`Error saving data to file: ${this.filePath}`, error);
       throw new DatabaseError(`Failed to save data to ${this.fileName}`);
+    }
+  }
+
+  private createDir(destinationDir: string): string {
+    try {
+      if (!existsSync(destinationDir)) {
+        fs.mkdirSync(destinationDir, { recursive: true });
+      }
+
+      return destinationDir
+    } catch (error: any) {
+      throw new Error(`Unable to create folder ${destinationDir}: ${error.message}`);
     }
   }
 
