@@ -23,7 +23,7 @@ export const createItemFromKeys = (keys: string[], data: ObjectLiteral): ObjectL
         throw new Error(`Key ${key} does not exist in ${JSON.stringify(source)}`);
       }
 
-      const isLastKey = parts.length - 1;
+      const isLastKey = index == parts.length - 1;
       target[key] = target[key] ?? (isLastKey ? value : Array.isArray(value) ? [] : {});
       target = target[key] as ObjectLiteral;
       source = value;
