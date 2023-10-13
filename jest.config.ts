@@ -11,9 +11,9 @@ const config: Config.InitialOptions = {
   transformIgnorePatterns: [
     '/node_modules/', // Ignore all code in node_modules by default
   ],
-  testRegex: './src/.*\\.(test|spec)?\\.(ts)$', // Match TypeScript test files
+  testRegex: './test/.*\\.(test|spec)?\\.(ts)$', // Match TypeScript test files
   moduleFileExtensions: ['ts', 'js', 'json'],
-  roots: ['<rootDir>src'],
+  roots: ['<rootDir>test'],
   verbose: true,
   automock: true,
 };
