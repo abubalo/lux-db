@@ -1,19 +1,22 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as path from 'path';
 import fs, { existsSync } from 'fs';
 import { readFile, writeFile } from 'fs/promises';
-import { KeyChain, Matcher, ObjectLiteral } from './index';
-import { collect } from './utils/collect';
-import { matchDataKeyValue } from './utils/match-data-key-value';
-import { createItemFromKeys } from './utils/create-items-from-keys';
-import { DatabaseError, FileNotFoundError } from './lib/Errors';
+import { KeyChain, Matcher, ObjectLiteral } from '../index';
+import { collect } from './collect';
+import { matchDataKeyValue } from './match-data-key-value';
+import { createItemFromKeys } from './create-items-from-keys';
+import { DatabaseError, FileNotFoundError } from '../lib/Errors';
 
 /**
  * Represents a simple JSON database with query capabilities.
+ *
  * @template T - Type of the database items.
  */
 export default class LuxDB<T extends object> {
   private readonly filePath: string;
   private _size = 0;
+  private cache: Map<string, T> = new Map();
 
   /**
    * The number of items in the database.
@@ -23,34 +26,62 @@ export default class LuxDB<T extends object> {
   }
 
   /**
- * Creates a new LuxDB instance.
- *
- * @param {string} fileName - The name of the database file (without extension).
- * @param {string} destination - The destination for the database (default is 'db' if not specified).
- * @throws {FileNotFoundError} Throws a custom error if the database file is not found.
- * @throws {DatabaseError} Throws a custom error for other initialization errors.
- */
+   * Creates a new LuxDB instance.
+   *
+   * @param {string} fileName - The name of the database file (without extension).
+   * @param {string} destination - The destination for the database (default is 'db' if not specified).
+   * @throws {FileNotFoundError} Throws a custom error if the database file is not found.
+   * @throws {DatabaseError} Throws a custom error for other initialization errors.
+   */
   constructor(
     private fileName: string,
     private destination = "db"
   ) {
-
     // Construct the full file path
     this.filePath = path.join(this.createDir(destination), `${fileName}.json`);
 
-    try {
+    this.loadCache();
+  }
 
-      // Check if the database file exists
-      if (!fs.existsSync(this.filePath)) {
-        // Create the database file if it doesn't exist
-        fs.writeFileSync(this.filePath, JSON.stringify([]), {
-          encoding: 'utf-8',
-        });
-        console.log(`Database file created at ${this.filePath}`);
+  /**
+   * Creates the destination directory if it doesn't exist.
+   *
+   * @param {string} destinationDir - The destination directory path.
+   * @throws {Error} Throws an error if the directory creation fails.
+   * @returns {string} The destination directory path.
+   */
+  private createDir(destinationDir: string): string {
+    try {
+      if (!existsSync(destinationDir)) {
+        fs.mkdirSync(destinationDir, { recursive: true });
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+      return destinationDir;
+    } catch (error: any) {
+      throw new Error(`Unable to create folder ${destinationDir}: ${error.message}`);
+    }
+  }
+
+  /**
+   * Loads data from the database file into the cache.
+   *
+   * @throws {FileNotFoundError} Throws a custom error if the file doesn't exist.
+   * @throws {DatabaseError} Throws a custom error for other initialization errors.
+   */
+  private async loadCache() {
+    try {
+      const fileData = await readFile(this.filePath, "utf-8");
+      const parseData = JSON.parse(fileData);
+      this._size = parseData.length;
+
+      parseData.forEach((item: T) => {
+        // Add items to the cache using a unique key (e.g., ID)
+        this.cache.set(this.getKeyForItem(item), item);
+      });
     } catch (error: any) {
       if (error.code === 'ENOENT') {
+        // Set Map to an empty Map
+        this.cache = new Map();
         // Throw a custom FileNotFoundError if the file doesn't exist
         throw new FileNotFoundError(this.filePath, error.code);
       } else {
@@ -61,18 +92,42 @@ export default class LuxDB<T extends object> {
   }
 
   /**
-   * Insert new data into the database.
-   * @param item - The item to be inserted.
-   * @returns Promise resolving to the inserted item.
+   * Saves data to the cache.
+   *
+   * @param {T | T[]} data - Data to be saved in the cache.
    */
-  public async insert(items: T | T[]): Promise<T | T[]> {
-    if (Array.isArray(items)) {
-      await this.save(items);
-      this._size += items.length;
-      return items;
+  private saveToCache(data: T | T[]): void {
+    const items = Array.isArray(data) ? data : [data];
+    items.forEach((item) => {
+      this.cache.set(this.getKeyForItem(item), item);
+    });
+
+    this._size = this.cache.size;
+  }
+
+  /**
+   * Saves data from the cache to the database file.
+   *
+   * @throws {DatabaseError} Throws a custom error if data saving fails.
+   */
+  private async saveToDisk(): Promise<void> {
+    const dataToWrite = Array.from(this.cache.values());
+    try {
+      await writeFile(this.filePath, JSON.stringify(dataToWrite));
+    } catch (error) {
+      throw new DatabaseError(`Failed to save data to ${this.fileName}`);
     }
-    await this.save(items);
-    this._size += 1;
+  }
+
+  // Helper function to generate a unique key for an item
+  private getKeyForItem(item: T): string {
+    return (item as any).id; 
+  }
+
+ 
+  public async insert(items: T | T[]): Promise<T | T[]> {
+    this.saveToCache(items)
+    this.saveToDisk()
     return items;
   }
   
@@ -204,6 +259,7 @@ export default class LuxDB<T extends object> {
     });
   }
 
+ 
   /**
    * Read the database file and parse its content.
    * @returns Promise resolving to an array of database items.
@@ -227,20 +283,7 @@ export default class LuxDB<T extends object> {
       }
       await writeFile(this.filePath, JSON.stringify(content));
     } catch (error) {
-      console.error(`Error saving data to file: ${this.filePath}`, error);
       throw new DatabaseError(`Failed to save data to ${this.fileName}`);
-    }
-  }
-
-  private createDir(destinationDir: string): string {
-    try {
-      if (!existsSync(destinationDir)) {
-        fs.mkdirSync(destinationDir, { recursive: true });
-      }
-
-      return destinationDir
-    } catch (error: any) {
-      throw new Error(`Unable to create folder ${destinationDir}: ${error.message}`);
     }
   }
 
