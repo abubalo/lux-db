@@ -6,7 +6,7 @@
 [![NPM Downloads](https://img.shields.io/npm/dw/lux-db)](https://www.npmjs.com/package/lux-db)
 
 
-LuxDB is your lightweight, developer-friendly document database library, crafted to streamline the storage, manipulation, and retrieval of JSON data in your applications. It's the perfect fit for a wide range of use cases.
+LuxDB is your lightweight, developer-friendly document-based database, crafted to streamline the storage, manipulation, and retrieval of JSON data in your applications. It's the perfect fit for a wide range of use cases.
 
 ## Features
 
@@ -66,7 +66,7 @@ interface Todo {
 }
 
 // Instantiate the database. 
-// Specify name with not extionsion, and destionation directory(optional). If destionation is not provided, the default will be 'db' 
+// Specify name with not extionsion, and destination directory(optional). If destination is not provided, the default will be 'db' 
 const db = luxdb<Todo>('file-name', "my-db");
 
 // Insert a single item
@@ -149,7 +149,7 @@ const deleteAllItems = async () => {
 };
 ```
 
-You can `ts-node {path/to/your-ts-file.ts}` in the terminal to execute your query
+You can run `ts-node {path/to/your-ts-file.ts}` in the terminal to execute your query
 
 > ⚠️ **Disclaimer:** Please note that this database is relatively simple and may not be suitable for very large-scale or high-performance applications. It lacks features like indexing, complex querying, and transaction support that more robust databases like SQL or NoSQL databases provide. However, for small to medium-sized applications or prototyping, it can be a convenient and lightweight solution.
 
