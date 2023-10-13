@@ -1,6 +1,6 @@
 {
   "name": "lux-db",
-  "version": "1.0.8",
+  "version": "1.0.10",
   "description": "A high-performance document-based JSON database equiped with CRUD query API functionalities",
   "repository": "git@github.com:abubalo/lux-db.git",
   "author": "Abubakar Balogun <42701866+abubalo@users.noreply.github.com>",
@@ -9,11 +9,11 @@
   "module": "dist/lux-db.mjs",
   "types": "dist/lux-db.d.ts",
   "files": [
-    "./dist"
+    "dist"
   ],
   "private": false,
   "scripts": {
-    "clean": "rimraf ./build",
+    "clean": "rimraf ./dist",
     "build": "npm-run-all clean lint && tsup src/**/*.ts --format cjs,esm --dts  ",
     "start": "node src",
     "local": "ts-node src",
@@ -60,8 +60,8 @@
   },
   "exports": {
     ".": {
-      "import": "./build/src/lux-db.mjs",
-      "require": "./build/src/lux-db.js"
+      "import": "./dist/lux-db.mjs",
+      "require": "./dist/lux-db.js"
     }
   },
   "engines": {
