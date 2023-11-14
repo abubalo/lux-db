@@ -101,7 +101,7 @@ export default class LuxDB<T extends object> {
 
       //Check if item exist in the cache
       if (!this.cache.has(key)) {
-        //If the cache is at the maximum size, evict the leaset recently used item
+        //If the cache is at the maximum size, evict the least recently used item
         if (this.cache.size >= this.maxCacheSize) {
           const lruKey = this.lruQueue.shift(); //Remove least recently used item key
           if (lruKey) {
@@ -109,7 +109,7 @@ export default class LuxDB<T extends object> {
           }
         }
 
-        this.lruQueue.push(key); // Add the current item key is the most recently used
+        this.lruQueue.push(key); // Add the current item key as the most recently used
       }
 
       this.cache.set(key, item);
