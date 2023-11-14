@@ -30,5 +30,10 @@ examples/
 *.log
 *.tmp
 
-# Source files
+# temp files
 db/
+
+# parcel
+.parcel-cache/
+.cache/
+*.cache
