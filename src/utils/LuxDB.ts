@@ -18,8 +18,8 @@ export default class LuxDB<T extends object> {
   private cache: Map<string, T> = new Map();
   private indexes: Map<string, Map<string, T>> = new Map(); //indexes for different fields
   private isDirty = false;
-  private maxCacheSize = 200; // Set maximum cachse size
-  private lruQueue: string[] = []; //Trac usage order of item in the cache
+  private maxCacheSize = 500; // Set the maximum cache size
+  private lruQueue: string[] = []; //Track usage order of item in the cache
 
   /**
    * The number of items in the database.
