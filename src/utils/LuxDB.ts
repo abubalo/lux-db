@@ -18,6 +18,8 @@ export default class LuxDB<T extends object> {
   private cache: Map<string, T> = new Map();
   private indexes: Map<string, Map<string, T>> = new Map(); //indexes for different fields
   private isDirty = false;
+  private maxCacheSize = 200; // Set maximum cachse size
+  private lruQueue: string[] = []; //Trac usage order of item in the cache
 
   /**
    * The number of items in the database.
@@ -97,6 +99,21 @@ export default class LuxDB<T extends object> {
       const key = this.getKeyForItem(item);
       this.cache.set(key, item);
 
+      //Check if item exist in the cache
+      if (!this.cache.has(key)) {
+        //If the cache is at the maximum size, evict the leaset recently used item
+        if (this.cache.size >= this.maxCacheSize) {
+          const lruKey = this.lruQueue.shift(); //Remove least recently used item key
+          if (lruKey) {
+            this.cache.delete(lruKey); // Evict the item from cache
+          }
+        }
+
+        this.lruQueue.push(key); // Add the current item key is the most recently used
+      }
+
+      this.cache.set(key, item);
+
       // Update indexes for different fields
       for (const field in item) {
         const fieldValue = item[field] as unknown as string;
@@ -124,8 +141,17 @@ export default class LuxDB<T extends object> {
       const dataToWrite = Array.from(this.cache.values());
       try {
         await writeFile(this.filePath, JSON.stringify(dataToWrite));
-      } catch (error) {
-        throw new DatabaseError(`Failed to save data to ${this.fileName}`);
+      } catch (error: any) {
+        let errorMessage = `Failed to save data to ${this.fileName}: ${error.message}`;
+
+        // Check for specific error codes or types
+        if (error.code === 'ENOSPC') {
+          errorMessage = `Failed to save data to ${this.fileName}: Disk full`;
+        } else if (error.code === 'EACCES') {
+          errorMessage = `Failed to save data to ${this.fileName}: Permission denied`;
+        }
+
+        throw new DatabaseError(errorMessage);
       }
     }
   }
