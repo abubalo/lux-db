@@ -1,9 +1,8 @@
 import LuxDB from './utils/LuxDB';
-import { createId } from '@paralleldrive/cuid2';
+import crypto from 'crypto';
 
 // Singleton instance
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let instance: LuxDB<any>;
+let instance: LuxDB<any> | null = null;
 
 /**
  * Create and return a single/global instance of the LuxDB.
@@ -15,11 +14,11 @@ const luxdb = <T extends object>(fileName: string, destination?: string): LuxDB<
   if (!instance) {
     instance = new LuxDB<T>(fileName, destination);
   }
-  return instance;
+  return instance as LuxDB<T>;
 };
 
-const autoId = (): string => createId();
+const autoId = (): string => {
+  return crypto.randomBytes(10).toString('hex');
+};
 
 export { luxdb as default, autoId };
-
-
