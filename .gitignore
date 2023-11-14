@@ -5,3 +5,8 @@ src/db
 
 # package manager
 package-lock.json
+
+# parcel
+.parcel-cache/
+.cache/
+*.cache
