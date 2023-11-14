@@ -1,7 +1,8 @@
 node_modules/
 dist/
 # database document
-src/db
+db
+.doc
 
 # package manager
 package-lock.json
