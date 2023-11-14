@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as path from 'path';
 import fs, { existsSync } from 'fs';
 import { readFile, writeFile } from 'fs/promises';
@@ -17,6 +16,8 @@ export default class LuxDB<T extends object> {
   private readonly filePath: string;
   private _size = 0;
   private cache: Map<string, T> = new Map();
+  private indexes: Map<string, Map<string, T>> = new Map(); //indexes for different fields
+  private isDirty = false;
 
   /**
    * The number of items in the database.
@@ -30,12 +31,10 @@ export default class LuxDB<T extends object> {
    *
    * @param {string} fileName - The name of the database file (without extension).
    * @param {string} destination - The destination for the database (default is 'db' if not specified).
-   * @throws {FileNotFoundError} Throws a custom error if the database file is not found.
-   * @throws {DatabaseError} Throws a custom error for other initialization errors.
    */
   constructor(
     private fileName: string,
-    private destination = "db"
+    private destination = 'db',
   ) {
     // Construct the full file path
     this.filePath = path.join(this.createDir(destination), `${fileName}.json`);
@@ -47,7 +46,7 @@ export default class LuxDB<T extends object> {
    * Creates the destination directory if it doesn't exist.
    *
    * @param {string} destinationDir - The destination directory path.
-   * @throws {Error} Throws an error if the directory creation fails.
+   * @throws {DatabaseError} Throws an error if the directory creation fails.
    * @returns {string} The destination directory path.
    */
   private createDir(destinationDir: string): string {
@@ -57,8 +56,8 @@ export default class LuxDB<T extends object> {
       }
 
       return destinationDir;
-    } catch (error: any) {
-      throw new Error(`Unable to create folder ${destinationDir}: ${error.message}`);
+    } catch (error) {
+      throw new DatabaseError(`Unable to create folder ${destinationDir}: ${error}`);
     }
   }
 
@@ -70,7 +69,7 @@ export default class LuxDB<T extends object> {
    */
   private async loadCache() {
     try {
-      const fileData = await readFile(this.filePath, "utf-8");
+      const fileData = await readFile(this.filePath, 'utf-8');
       const parseData = JSON.parse(fileData);
       this._size = parseData.length;
 
@@ -91,46 +90,63 @@ export default class LuxDB<T extends object> {
     }
   }
 
-  /**
-   * Saves data to the cache.
-   *
-   * @param {T | T[]} data - Data to be saved in the cache.
-   */
-  private saveToCache(data: T | T[]): void {
+  // Add to cache and mark it as dirty
+  private addToCache(data: T | T[]): void {
     const items = Array.isArray(data) ? data : [data];
     items.forEach((item) => {
-      this.cache.set(this.getKeyForItem(item), item);
+      const key = this.getKeyForItem(item);
+      this.cache.set(key, item);
+
+      // Update indexes for different fields
+      for (const field in item) {
+        const fieldValue = item[field] as unknown as string;
+        if (!this.indexes.has(field)) {
+          this.indexes.set(field, new Map());
+        }
+        this.indexes.get(field)?.set(fieldValue, item);
+      }
     });
 
+    // Mae database as dirty
+    this.isDirty = true;
+
+    //Update database size
     this._size = this.cache.size;
   }
 
   /**
-   * Saves data from the cache to the database file.
+   * Saves data from the cache to the database file on when it's mark as dirty.
    *
    * @throws {DatabaseError} Throws a custom error if data saving fails.
    */
   private async saveToDisk(): Promise<void> {
-    const dataToWrite = Array.from(this.cache.values());
-    try {
-      await writeFile(this.filePath, JSON.stringify(dataToWrite));
-    } catch (error) {
-      throw new DatabaseError(`Failed to save data to ${this.fileName}`);
+    if (this.isDirty) {
+      const dataToWrite = Array.from(this.cache.values());
+      try {
+        await writeFile(this.filePath, JSON.stringify(dataToWrite));
+      } catch (error) {
+        throw new DatabaseError(`Failed to save data to ${this.fileName}`);
+      }
     }
+  }
+
+  // Retrieve items using an index
+  public getIndexedItems(key: string): T | null {
+    const indexedItem = this.indexes.get(key);
+    return indexedItem ? indexedItem.get(key) || null : null;
   }
 
   // Helper function to generate a unique key for an item
   private getKeyForItem(item: T): string {
-    return (item as any).id; 
+    return (item as any).id;
   }
 
- 
   public async insert(items: T | T[]): Promise<T | T[]> {
-    this.saveToCache(items)
-    this.saveToDisk()
+    this.addToCache(items);
+    this.saveToDisk();
     return items;
   }
-  
+
   /**
    * Retrieve a single item from the database based on specified keys.
    * @param keys - Keys to match for retrieving the item.
@@ -259,7 +275,6 @@ export default class LuxDB<T extends object> {
     });
   }
 
- 
   /**
    * Read the database file and parse its content.
    * @returns Promise resolving to an array of database items.
@@ -286,5 +301,4 @@ export default class LuxDB<T extends object> {
       throw new DatabaseError(`Failed to save data to ${this.fileName}`);
     }
   }
-
 }
