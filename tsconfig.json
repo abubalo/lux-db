@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
       "target": "ES2020",
-      "module": "ES2020",
+      "module": "ESNext",
       "allowJs": false,
       "strict": true,
       "noEmitOnError": true,
@@ -11,10 +11,10 @@
       "forceConsistentCasingInFileNames": true,
       "types": ["node", "jest"],
       "lib": ["es2018"],
-      "outDir": "./",
-      "rootDir": "./src",
+      "outDir": "./dist",
+      "rootDir": "./",
       "baseUrl": "./"
     },
-    "include": ["src/**/*", "package.json", "examples"],
-    "exclude": ["node_modules", "test/LuxDB.test.ts", "./dist", ]
+    "include": ["src/**/*", "package.json"],
+    "exclude": ["node_modules", "test/**/*.test", "./dist", ]
   }
