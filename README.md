@@ -20,7 +20,7 @@ deleteOne: Deletes a single item from the database.
 deleteAll: Deletes multiple items from the database.
 
 
-**Optimized for Small-scale Projects**: With its simple and lightweight implementation, LuxDB is tailored for small-scale JavaScript/TypeScript projects. Its functionality strikes a balance between robust features and simplicity, catering to the needs of smaller applications without unnecessary complexity.
+- **Optimized for Small-scale Projects**: With its simple and lightweight implementation, LuxDB is tailored for small-scale JavaScript/TypeScript projects. Its functionality strikes a balance between robust features and simplicity, catering to the needs of smaller applications without unnecessary complexity.
 
 - **Caching**: Utilizes an in-memory cache (Map) to store database items, enhancing read and write operations' speed. Implements a least recently used (LRU) caching mechanism to manage cache size and eviction of less frequently accessed items.
 
@@ -51,9 +51,9 @@ There are several potential use cases of luxDB, among them are:
 
 - **Data Caching:** Use it as a caching mechanism for frequently accessed data.
 
-- **Custom Data Storage:** For any application where you need to persist custom data structures, this database can be adapted to store and manage that data.
-
 - **IoT Data Storage**: Storing and managing IoT (Internet of Things) device data in scenarios where a lightweight database is suitable for the scale and complexity of the data.
+
+- **Custom Data Storage:** For any application where you need to persist custom data structures, this database can be adapted to store and manage that data.
 
 In addition to its boundless possibilities, LuxDB offers the advantage of type safety. By leveraging TypeScript for runtime data validation, it ensures that any inserted data adheres to the defined schema. If a mismatch occurs, an instance error is raised, enhancing the security of your data.
 
