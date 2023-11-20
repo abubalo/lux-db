@@ -2,10 +2,10 @@ import * as path from 'path';
 import fs, { existsSync } from 'fs';
 import { readFile, writeFile } from 'fs/promises';
 import { KeyChain, Matcher, ObjectLiteral } from '../index';
-import { collect } from './collect';
-import { matchDataKeyValue } from './match-data-key-value';
-import { createItemFromKeys } from './create-items-from-keys';
-import { DatabaseError, FileNotFoundError } from '../lib/Errors';
+import { collect } from '../utils/collect';
+import { matchDataKeyValue } from '../utils/match-data-key-value';
+import { createItemFromKeys } from '../utils/create-items-from-keys';
+import { DatabaseError, FileNotFoundError } from '../customError/Errors';
 
 /**
  * Represents a simple JSON database with query capabilities.
@@ -19,6 +19,7 @@ export default class LuxDB<T extends object> {
   private indexes: Map<string, Map<string, T>> = new Map(); //indexes for different fields
   private isDirty = false;
   private maxCacheSize = 500; // Set the maximum cache size
+  private dynamicThreshold = 0.8;
   private lruQueue: string[] = []; //Track usage order of item in the cache
 
   /**
@@ -92,12 +93,34 @@ export default class LuxDB<T extends object> {
     }
   }
 
+  private adjustCacheSize() {
+    const currentCacheSize = this.cache.size / this.maxCacheSize;
+
+    if (currentCacheSize > this.dynamicThreshold) {
+      const newMaxCacheSize = Math.ceil(this.cache.size / this.dynamicThreshold);
+      this.maxCacheSize = newMaxCacheSize;
+      //Perfom triming or eviction base on new maxCacheSize
+      this.trimCache();
+    }
+  }
+  private trimCache() {
+    while (this.cache.size > this.maxCacheSize) {
+      const lruKey = this.lruQueue.shift();
+      if (lruKey) {
+        const deletedItem = this.cache.get(lruKey);
+        this.cache.delete(lruKey);
+        this.removeFromIndexes(deletedItem);
+      }
+    }
+  }
+
   // Add to cache and mark it as dirty
   private addToCache(data: T | T[]): void {
     const items = Array.isArray(data) ? data : [data];
     items.forEach((item) => {
       const key = this.getKeyForItem(item);
       this.cache.set(key, item);
+      this.adjustCacheSize()
 
       //Check if item exist in the cache
       if (!this.cache.has(key)) {
@@ -160,6 +183,17 @@ export default class LuxDB<T extends object> {
   public getIndexedItems(key: string): T | null {
     const indexedItem = this.indexes.get(key);
     return indexedItem ? indexedItem.get(key) || null : null;
+  }
+
+  private removeFromIndexes(item: T | undefined) {
+    if (!item) return;
+    for (const field in item) {
+      const fieldValue = item[field] as unknown as string;
+      const indexMap = this.indexes.get(field);
+      if (indexMap?.has(fieldValue)) {
+        indexMap.delete(fieldValue);
+      }
+    }
   }
 
   // Helper function to generate a unique key for an item
