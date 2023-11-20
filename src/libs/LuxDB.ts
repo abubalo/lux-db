@@ -19,7 +19,7 @@ export default class LuxDB<T extends object> {
   private indexes: Map<string, Map<string, T>> = new Map(); //indexes for different fields
   private isDirty = false;
   private maxCacheSize = 500; // Set the maximum cache size
-  private dynamicThreshold = 0.8;
+  private dynamicCaheThreshold = 0.8;
   private lruQueue: string[] = []; //Track usage order of item in the cache
 
   /**
@@ -93,18 +93,47 @@ export default class LuxDB<T extends object> {
     }
   }
 
-  private adjustCacheSize() {
-    const currentCacheSize = this.cache.size / this.maxCacheSize;
+  /**
+ * Adjusts the maximum cache size dynamically based on usage.
+ */
+private adjustCacheSize() {
+  const currentCacheSize = this.cache.size / this.maxCacheSize;
 
-    if (currentCacheSize > this.dynamicThreshold) {
-      const newMaxCacheSize = Math.ceil(this.cache.size / this.dynamicThreshold);
-      this.maxCacheSize = newMaxCacheSize;
-      //Perfom triming or eviction base on new maxCacheSize
-      this.trimCache();
+  if (currentCacheSize > this.dynamicCaheThreshold) {
+    const newMaxCacheSize = Math.ceil(this.cache.size / this.dynamicCaheThreshold);
+    this.maxCacheSize = newMaxCacheSize;
+    // Perform trimming or eviction based on the new maxCacheSize
+    this.trimCache();
+  }
+}
+
+/**
+ * Trims the cache by evicting least recently used items to meet the maxCacheSize limit.
+ */
+private trimCache() {
+  while (this.cache.size > this.maxCacheSize) {
+    const lruKey = this.lruQueue.shift();
+    if (lruKey) {
+      const deletedItem = this.cache.get(lruKey);
+      this.cache.delete(lruKey);
+      this.removeFromIndexes(deletedItem);
     }
   }
-  private trimCache() {
-    while (this.cache.size > this.maxCacheSize) {
+}
+
+/**
+ * Adds data to the cache and maintains cache size and indexes.
+ * @param {T | T[]} data - The data or array of data to add to the cache.
+ */
+private addToCache(data: T | T[]): void {
+  const items = Array.isArray(data) ? data : [data];
+
+  items.forEach((item) => {
+    const key = this.getKeyForItem(item);
+
+    // Check if the item is already in the cache before adding
+    // If the cache is at maximum size, evict the least recently used item
+    if (!this.cache.has(key) && this.cache.size >= this.maxCacheSize) {
       const lruKey = this.lruQueue.shift();
       if (lruKey) {
         const deletedItem = this.cache.get(lruKey);
@@ -112,47 +141,29 @@ export default class LuxDB<T extends object> {
         this.removeFromIndexes(deletedItem);
       }
     }
-  }
 
-  // Add to cache and mark it as dirty
-  private addToCache(data: T | T[]): void {
-    const items = Array.isArray(data) ? data : [data];
-    items.forEach((item) => {
-      const key = this.getKeyForItem(item);
-      this.cache.set(key, item);
-      this.adjustCacheSize()
+    // Add/update the item in the cache
+    this.cache.set(key, item);
 
-      //Check if item exist in the cache
-      if (!this.cache.has(key)) {
-        //If the cache is at the maximum size, evict the least recently used item
-        if (this.cache.size >= this.maxCacheSize) {
-          const lruKey = this.lruQueue.shift(); //Remove least recently used item key
-          if (lruKey) {
-            this.cache.delete(lruKey); // Evict the item from cache
-          }
-        }
-
-        this.lruQueue.push(key); // Add the current item key as the most recently used
+    // Update indexes for different fields
+    for (const field in item) {
+      const fieldValue = item[field] as unknown as string;
+      if (!this.indexes.has(field)) {
+        this.indexes.set(field, new Map());
       }
+      this.indexes.get(field)?.set(fieldValue, item);
+    }
+  });
 
-      this.cache.set(key, item);
+  // Mark the database as dirty
+  this.isDirty = true;
 
-      // Update indexes for different fields
-      for (const field in item) {
-        const fieldValue = item[field] as unknown as string;
-        if (!this.indexes.has(field)) {
-          this.indexes.set(field, new Map());
-        }
-        this.indexes.get(field)?.set(fieldValue, item);
-      }
-    });
+  // Update database size
+  this._size = this.cache.size;
 
-    // Mae database as dirty
-    this.isDirty = true;
-
-    //Update database size
-    this._size = this.cache.size;
-  }
+  // Adjust cache size after adding items
+  this.adjustCacheSize();
+}
 
   /**
    * Saves data from the cache to the database file on when it's mark as dirty.
