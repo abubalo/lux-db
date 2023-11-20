@@ -10,35 +10,50 @@ LuxDB is your lightweight, developer-friendly document-based database, crafted t
 
 ## Features
 
-- LuxDB provides a seamless way to store, update, and delete data. It supports both single-item and batch operations, ensuring you have complete control over your data.
+- **Query Operations**: Supports CRUD (Create, Read, Update, Delete) operations:
+insert: Adds items to the database.
+getOne: Retrieves a single item based on specified keys.
+getAll: Retrieves multiple items based on specified keys.
+updateOne: Updates a single item in the database.
+updateAll: Updates multiple items in the database.
+deleteOne: Deletes a single item from the database.
+deleteAll: Deletes multiple items from the database.
 
-- Query capabilities with various `matchers` for retrieving, updating, and deleting data.
 
-- Simple and lightweight implementation suitable for working with small-scale Javascript/Typescript projects.
+**Optimized for Small-scale Projects**: With its simple and lightweight implementation, LuxDB is tailored for small-scale JavaScript/TypeScript projects. Its functionality strikes a balance between robust features and simplicity, catering to the needs of smaller applications without unnecessary complexity.
 
+- **Caching**: Utilizes an in-memory cache (Map) to store database items, enhancing read and write operations' speed. Implements a least recently used (LRU) caching mechanism to manage cache size and eviction of less frequently accessed items.
+
+- **Indexing**: Maintains indexes for different fields of the database items to optimize retrieval based on specific keys. Updates indexes whenever items are added, ensuring efficient querying.
+
+- **Error Handling**: Custom error handling for file not found, database errors, and various file system operation failures.
 ## Use Cases
 
 There are several potential use cases of luxDB, among them are:
 
-- Configuration Storage: You can use this database to store and manage configuration settings for your application. Each configuration could be represented as a document in the database.
+- **Configuration Storage**: You can use this database to store and manage configuration settings for your application. Each configuration could be represented as a document in the database.
 
 - **User Preference:** Store user preference with attributes such as theme choices, notification settings, and custom configurations in the database.
 
-- **Content Management:** If you have a content-driven application, you can store articles, posts, or other content as documents in the database.
+- **Content Management System:** If you have a content-driven application, you can store articles, posts, or other content as documents in the database.
 
 - **Product Catalog:** Manage product information for an e-commerce website, including product details, prices, and availability.
+
+- **Small to Medium-Sized Applications**: Simple web or mobile applications where a lightweight database solution is needed for storing and retrieving structured data.
 
 - **Logging and Audit Trails:** Store logs and audit trails for your application to keep track of user actions and system events.
 
 - **Task Management:** Implement a task management system where each task is a document in the database.
 
-**- Messaging:** For building a simple chat or messaging application, you can store chat messages as documents.
+- **Messaging:** For building a simple chat or messaging application, you can store chat messages as documents.
 
-- **Session Management:** Store session data for user sessions in a web application.
+- **Configuration Management**: Storing configuration settings or application preferences that can be easily accessed and modified
 
 - **Data Caching:** Use it as a caching mechanism for frequently accessed data.
 
 - **Custom Data Storage:** For any application where you need to persist custom data structures, this database can be adapted to store and manage that data.
+
+- **IoT Data Storage**: Storing and managing IoT (Internet of Things) device data in scenarios where a lightweight database is suitable for the scale and complexity of the data.
 
 In addition to its boundless possibilities, LuxDB offers the advantage of type safety. By leveraging TypeScript for runtime data validation, it ensures that any inserted data adheres to the defined schema. If a mismatch occurs, an instance error is raised, enhancing the security of your data.
 
