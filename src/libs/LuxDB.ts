@@ -19,7 +19,7 @@ export default class LuxDB<T extends object> {
   private indexes: Map<string, Map<string, T>> = new Map(); //indexes for different fields
   private isDirty = false;
   private maxCacheSize = 500; // Set the maximum cache size
-  private dynamicCaheThreshold = 0.8;
+  private dynamicCacheThreshold = 0.8;
   private lruQueue: string[] = []; //Track usage order of item in the cache
 
   /**
@@ -99,8 +99,8 @@ export default class LuxDB<T extends object> {
 private adjustCacheSize() {
   const currentCacheSize = this.cache.size / this.maxCacheSize;
 
-  if (currentCacheSize > this.dynamicCaheThreshold) {
-    const newMaxCacheSize = Math.ceil(this.cache.size / this.dynamicCaheThreshold);
+  if (currentCacheSize > this.dynamicCacheThreshold) {
+    const newMaxCacheSize = Math.ceil(this.cache.size / this.dynamicCacheThreshold);
     this.maxCacheSize = newMaxCacheSize;
     // Perform trimming or eviction based on the new maxCacheSize
     this.trimCache();
