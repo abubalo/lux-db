@@ -94,46 +94,24 @@ export default class LuxDB<T extends object> {
   }
 
   /**
- * Adjusts the maximum cache size dynamically based on usage.
- */
-private adjustCacheSize() {
-  const currentCacheSize = this.cache.size / this.maxCacheSize;
+   * Adjusts the maximum cache size dynamically based on usage.
+   */
+  private adjustCacheSize() {
+    const currentCacheSize = this.cache.size / this.maxCacheSize;
 
-  if (currentCacheSize > this.dynamicCacheThreshold) {
-    const newMaxCacheSize = Math.ceil(this.cache.size / this.dynamicCacheThreshold);
-    this.maxCacheSize = newMaxCacheSize;
-    // Perform trimming or eviction based on the new maxCacheSize
-    this.trimCache();
-  }
-}
-
-/**
- * Trims the cache by evicting least recently used items to meet the maxCacheSize limit.
- */
-private trimCache() {
-  while (this.cache.size > this.maxCacheSize) {
-    const lruKey = this.lruQueue.shift();
-    if (lruKey) {
-      const deletedItem = this.cache.get(lruKey);
-      this.cache.delete(lruKey);
-      this.removeFromIndexes(deletedItem);
+    if (currentCacheSize > this.dynamicCacheThreshold) {
+      const newMaxCacheSize = Math.ceil(this.cache.size / this.dynamicCacheThreshold);
+      this.maxCacheSize = newMaxCacheSize;
+      // Perform trimming or eviction based on the new maxCacheSize
+      this.trimCache();
     }
   }
-}
 
-/**
- * Adds data to the cache and maintains cache size and indexes.
- * @param {T | T[]} data - The data or array of data to add to the cache.
- */
-private addToCache(data: T | T[]): void {
-  const items = Array.isArray(data) ? data : [data];
-
-  items.forEach((item) => {
-    const key = this.getKeyForItem(item);
-
-    // Check if the item is already in the cache before adding
-    // If the cache is at maximum size, evict the least recently used item
-    if (!this.cache.has(key) && this.cache.size >= this.maxCacheSize) {
+  /**
+   * Trims the cache by evicting least recently used items to meet the maxCacheSize limit.
+   */
+  private trimCache() {
+    while (this.cache.size > this.maxCacheSize) {
       const lruKey = this.lruQueue.shift();
       if (lruKey) {
         const deletedItem = this.cache.get(lruKey);
@@ -141,29 +119,51 @@ private addToCache(data: T | T[]): void {
         this.removeFromIndexes(deletedItem);
       }
     }
+  }
 
-    // Add/update the item in the cache
-    this.cache.set(key, item);
+  /**
+   * Adds data to the cache and maintains cache size and indexes.
+   * @param {T | T[]} data - The data or array of data to add to the cache.
+   */
+  private addToCache(data: T | T[]): void {
+    const items = Array.isArray(data) ? data : [data];
 
-    // Update indexes for different fields
-    for (const field in item) {
-      const fieldValue = item[field] as unknown as string;
-      if (!this.indexes.has(field)) {
-        this.indexes.set(field, new Map());
+    items.forEach((item) => {
+      const key = this.getKeyForItem(item);
+
+      // Check if the item is already in the cache before adding
+      // If the cache is at maximum size, evict the least recently used item
+      if (!this.cache.has(key) && this.cache.size >= this.maxCacheSize) {
+        const lruKey = this.lruQueue.shift();
+        if (lruKey) {
+          const deletedItem = this.cache.get(lruKey);
+          this.cache.delete(lruKey);
+          this.removeFromIndexes(deletedItem);
+        }
       }
-      this.indexes.get(field)?.set(fieldValue, item);
-    }
-  });
 
-  // Mark the database as dirty
-  this.isDirty = true;
+      // Add/update the item in the cache
+      this.cache.set(key, item);
 
-  // Update database size
-  this._size = this.cache.size;
+      // Update indexes for different fields
+      for (const field in item) {
+        const fieldValue = item[field] as unknown as string;
+        if (!this.indexes.has(field)) {
+          this.indexes.set(field, new Map());
+        }
+        this.indexes.get(field)?.set(fieldValue, item);
+      }
+    });
 
-  // Adjust cache size after adding items
-  this.adjustCacheSize();
-}
+    // Mark the database as dirty
+    this.isDirty = true;
+
+    // Update database size
+    this._size = this.cache.size;
+
+    // Adjust cache size after adding items
+    this.adjustCacheSize();
+  }
 
   /**
    * Saves data from the cache to the database file on when it's mark as dirty.
@@ -179,13 +179,17 @@ private addToCache(data: T | T[]): void {
         let errorMessage = `Failed to save data to ${this.fileName}: ${error.message}`;
 
         // Check for specific error codes or types
-        if (error.code === 'ENOSPC') {
+        if (error.code === 'ENOENT') {
+          errorMessage = `Failed to save data to ${this.fileName}: File not found`;
+        } else if (error.code === 'ENOSPC') {
           errorMessage = `Failed to save data to ${this.fileName}: Disk full`;
         } else if (error.code === 'EACCES') {
           errorMessage = `Failed to save data to ${this.fileName}: Permission denied`;
+        } else if (error instanceof SyntaxError) {
+          errorMessage = `Failed to parse JSON in ${this.fileName}: Invalid JSON format`;
         }
 
-        throw new DatabaseError(errorMessage);
+        throw new DatabaseError(errorMessage, -1);
       }
     }
   }
@@ -352,7 +356,15 @@ private addToCache(data: T | T[]): void {
    * @private
    */
   private async read(): Promise<Array<T>> {
-    return JSON.parse(await readFile(this.filePath, 'utf-8'));
+    let fileContent;
+    try {
+      fileContent = await readFile(this.filePath, 'utf-8');
+
+      return JSON.parse(fileContent);
+    } catch (error: any) {
+      // Handle JSON parsing errors
+      throw new DatabaseError(`Failed to parse JSON in ${this.fileName}: ${error.message}`);
+    }
   }
 
   /**
