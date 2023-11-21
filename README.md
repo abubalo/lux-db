@@ -31,15 +31,13 @@ deleteAll: Deletes multiple items from the database.
 
 There are several potential use cases of luxDB, among them are:
 
-- **Configuration Storage**: You can use this database to store and manage configuration settings for your application. Each configuration could be represented as a document in the database.
+- **Small to Medium-Sized Applications**: Simple web or mobile applications where a lightweight database solution is needed for storing and retrieving structured data.
 
 - **User Preference:** Store user preference with attributes such as theme choices, notification settings, and custom configurations in the database.
 
 - **Content Management System:** If you have a content-driven application, you can store articles, posts, or other content as documents in the database.
 
 - **Product Catalog:** Manage product information for an e-commerce website, including product details, prices, and availability.
-
-- **Small to Medium-Sized Applications**: Simple web or mobile applications where a lightweight database solution is needed for storing and retrieving structured data.
 
 - **Logging and Audit Trails:** Store logs and audit trails for your application to keep track of user actions and system events.
 
