@@ -162,7 +162,7 @@ const deleteAllItems = async () => {
 };
 ```
 
-You can run `ts-node {path/to/your-ts-file.ts}` in the terminal to execute your query
+// Execute your queries with `ts-node {path/to/your-ts-file.ts}` in the terminal
 
 > ⚠️ **Disclaimer:** Please note that this database is relatively simple and may not be suitable for very large-scale or high-performance applications. It lacks features like indexing, complex querying, and transaction support that more robust databases like SQL or NoSQL databases provide. However, for small to medium-sized applications or prototyping, it can be a convenient and lightweight solution.
 
