@@ -22,7 +22,7 @@ deleteAll: Deletes multiple items from the database.
 
 - **Optimized for Small-scale Projects**: With its simple and lightweight implementation, LuxDB is tailored for small-scale JavaScript/TypeScript projects. Its functionality strikes a balance between robust features and simplicity, catering to the needs of smaller applications without unnecessary complexity.
 
-- **Caching**: Utilizes an in-memory cache (Map) to store database items, enhancing read and write operations' speed. Implements a least recently used (LRU) caching mechanism to manage cache size and eviction of less frequently accessed items.
+- **Caching**: Utilizes an in-memory cache to store database items, enhancing read and write operations' speed. Implements a least recently used (LRU) caching mechanism to manage cache size and eviction of less frequently accessed items.
 
 - **Indexing**: Maintains indexes for different fields of the database items to optimize retrieval based on specific keys. Updates indexes whenever items are added, ensuring efficient querying.
 
@@ -31,13 +31,13 @@ deleteAll: Deletes multiple items from the database.
 
 There are several potential use cases of luxDB, among them are:
 
-- **Small to Medium-Sized Applications**: Simple web or mobile applications where a lightweight database solution is needed for storing and retrieving structured data.
+- **Small to Medium-Sized Applications**: Ideal for simple web or mobile applications requiring a lightweight database solution for structured data storage and retrieval.
 
-- **User Preference:** Store user preference with attributes such as theme choices, notification settings, and custom configurations in the database.
+- **User Preference:** Store user preferences such as theme choices, notification settings, and custom configurations.
 
-- **Content Management System:** If you have a content-driven application, you can store articles, posts, or other content as documents in the database.
+- **Content Management System:** Store articles, posts, or other content as documents in the database.
 
-- **Product Catalog:** Manage product information for an e-commerce website, including product details, prices, and availability.
+- **Product Catalog:**  Manage product information for e-commerce websites including details, prices, and availability.
 
 - **Logging and Audit Trails:** Store logs and audit trails for your application to keep track of user actions and system events.
 
@@ -47,7 +47,7 @@ There are several potential use cases of luxDB, among them are:
 
 - **Configuration Management**: Storing configuration settings or application preferences that can be easily accessed and modified
 
-- **Data Caching:** Use it as a caching mechanism for frequently accessed data.
+- **Data Caching:** Utilize as a caching mechanism for frequently accessed data.
 
 - **IoT Data Storage**: Storing and managing IoT (Internet of Things) device data in scenarios where a lightweight database is suitable for the scale and complexity of the data.
 
