@@ -12,7 +12,7 @@ import { DatabaseError, FileNotFoundError } from '../customError/Errors';
  *
  * @template T - Type of the database items.
  */
-export default class LuxDB<T extends object> {
+export class LuxDB<T extends object> {
   private readonly filePath: string;
   private _size = 0;
   private cache: Map<string, T> = new Map();
@@ -130,17 +130,6 @@ export default class LuxDB<T extends object> {
 
     items.forEach((item) => {
       const key = this.getKeyForItem(item);
-
-      // Check if the item is already in the cache before adding
-      // If the cache is at maximum size, evict the least recently used item
-      if (!this.cache.has(key) && this.cache.size >= this.maxCacheSize) {
-        const lruKey = this.lruQueue.shift();
-        if (lruKey) {
-          const deletedItem = this.cache.get(lruKey);
-          this.cache.delete(lruKey);
-          this.removeFromIndexes(deletedItem);
-        }
-      }
 
       // Add/update the item in the cache
       this.cache.set(key, item);
