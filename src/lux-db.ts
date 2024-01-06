@@ -1,4 +1,4 @@
-import LuxDB from './utils/LuxDB';
+import {LuxDB} from './lib/LuxDB';
 import crypto from 'crypto';
 
 // Singleton instance
