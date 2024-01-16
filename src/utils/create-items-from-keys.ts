@@ -1,4 +1,4 @@
-import { ObjectLiteral } from '../index';
+import { ObjectLiteral } from '../types';
 
 /**
  * Create a new object by selecting specific keys from a source object

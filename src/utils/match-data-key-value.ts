@@ -1,4 +1,4 @@
-import { Matcher, ObjectLiteral, Comparator } from '../index';
+import { Matcher, ObjectLiteral, Comparator } from '../types';
 import { getKeyChainValue } from './get-key-chain-values';
 
 /**

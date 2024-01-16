@@ -1,4 +1,4 @@
-import { Collector, Comparator, KeyChain } from '../index';
+import { Collector, Comparator, KeyChain } from '../types';
 
 /**
  * Create a query builder for filtering data based on key-value comparisons.
