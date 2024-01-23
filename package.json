@@ -1,21 +1,21 @@
 {
   "name": "lux-db",
-  "version": "1.0.10",
+  "version": "1.0.0",
   "description": "A high-performance document-based JSON database equiped with CRUD query API functionalities",
   "repository": "git@github.com:abubalo/lux-db.git",
   "author": "Abubakar Balogun <42701866+abubalo@users.noreply.github.com>",
   "license": "MIT",
-  "source": "src/index.ts",
+  "source": "src/lux-db.ts",
   "main": "dist/main.js",
   "module": "dist/module.js",
   "types": "dist/types.d.ts",
   "files": [
     "dist"
   ],
-  "private": false,
   "scripts": {
     "watch": "parcel watch",
     "build": "parcel build",
+    "local": "ts-node ./",
     "lint": "eslint src",
     "test": "jest"
   },
@@ -45,17 +45,14 @@
     "eslint": "^8.34.0",
     "eslint-config-prettier": "^8.6.0",
     "jest": "^29.7.0",
-    "parcel": "^2.10.1",
+    "parcel": "^2.11.0",
     "prettier": "^3.0.3",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1"
   },
   "devDependencies": {
-    "@parcel/packager-ts": "^2.10.1",
-    "@parcel/transformer-typescript-types": "^2.10.1",
+    "@parcel/packager-ts": "^2.11.0",
+    "@parcel/transformer-typescript-types": "^2.11.0",
     "typescript": "^5.2.2"
   }
- 
-
-  
 }
