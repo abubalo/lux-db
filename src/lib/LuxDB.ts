@@ -1,7 +1,7 @@
 import * as path from 'path';
 import fs, { existsSync } from 'fs';
 import { readFile, writeFile } from 'fs/promises';
-import { KeyChain, Matcher, ObjectLiteral } from '../index';
+import { Config, KeyChain, Matcher, ObjectLiteral } from '../types';
 import { collect } from '../utils/collect';
 import { matchDataKeyValue } from '../utils/match-data-key-value';
 import { createItemFromKeys } from '../utils/create-items-from-keys';
@@ -13,6 +13,7 @@ import { DatabaseError, FileNotFoundError } from '../customError/Errors';
  * @template T - Type of the database items.
  */
 export class LuxDB<T extends object> {
+  private static instance: LuxDB<any> | null
   private readonly filePath: string;
   private _size = 0;
   private cache: Map<string, T> = new Map();
@@ -43,6 +44,23 @@ export class LuxDB<T extends object> {
     this.filePath = path.join(this.createDir(destination), `${fileName}.json`);
 
     this.loadCache();
+  }
+
+  
+/**
+ * Create and return a single/global instance of the LuxDB.
+ * @param fileName - The name of the database file (without extension).
+ * @param destination - The folder where the databases will be located.
+ * @returns The LuxDB instance.
+ */
+  static creatInstance<U extends object>(fileName: string, destination?: string): LuxDB<U>{
+
+
+      if(!LuxDB.instance){
+        LuxDB.instance = new LuxDB<U>(fileName, destination);
+      }
+
+      return LuxDB.instance
   }
 
   /**
